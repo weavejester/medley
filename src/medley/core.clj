@@ -1,4 +1,5 @@
-(ns medley.core)
+(ns medley.core
+  "A small collection of useful pure functions.")
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
