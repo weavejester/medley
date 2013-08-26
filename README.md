@@ -17,7 +17,7 @@ To install, add the following to your project `:dependencies`:
 
 ## Documentation
 
-* [API Docs](http://medley.github.io/medley/medley.core.html)
+* [API Docs](http://weavejester.github.io/medley/medley.core.html)
 
 ## License
 
