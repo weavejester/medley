@@ -7,6 +7,8 @@ Unlike [flatland/useful][1], Medley does not attempt to be
 comprehensive, and limits itself pure functions that would not seem
 out of place in the core Clojure library.
 
+[1]: https://github.com/flatland/useful
+
 ## Installation
 
 To install, add the following to your project `:dependencies`:
