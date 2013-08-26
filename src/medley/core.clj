@@ -19,12 +19,16 @@
 (defn map-keys
   "Maps a function over the keys of an associative collection."
   [f coll]
-  (reduce-kv #(assoc %1 (f %2) %3) (empty coll) coll))
+  (persistent! (reduce-kv #(assoc! %1 (f %2) %3)
+                          (transient (empty coll))
+                          coll)))
 
 (defn map-vals
   "Maps a function over the values of an associative collection."
   [f coll]
-  (reduce-kv #(assoc %1 %2 (f %3)) (empty coll) coll))
+  (persistent! (reduce-kv #(assoc! %1 %2 (f %3))
+                          (transient (empty coll))
+                          coll)))
 
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
