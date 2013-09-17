@@ -31,6 +31,13 @@
                           (transient (empty coll))
                           coll)))
 
+(defn filter-vals
+  "Returns the elements of an associative collection for which (pred value) returns true."
+  [pred coll]
+  (persistent! (reduce-kv #(if (pred %3) (assoc! %1 %2 %3) %1)
+                          (transient (empty coll))
+                          coll)))
+
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
   ([] clojure.lang.PersistentQueue/EMPTY)
