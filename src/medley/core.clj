@@ -57,23 +57,14 @@
   [x]
   (instance? clojure.lang.PersistentQueue x))
 
-(defn- find-best [better? coll]
-  (loop [best (first coll), coll coll]
-    (if-let [coll (next coll)]
-      (let [x (first coll)]
-        (if (better? x best)
-          (recur x coll)
-          (recur best coll)))
-      best)))
-
 (defn least
   "Find the least element of the collection (as defined by the compare
   function) in O(n) time."
   [coll]
-  (find-best #(neg? (compare %1 %2)) coll))
+  (reduce #(if (neg? (compare %2 %1)) %2 %1) coll))
 
 (defn greatest
   "Find the greatest element of the collection (as defined by the compare
   function) in O(n) time."
   [coll]
-  (find-best #(pos? (compare %1 %2)) coll))
+  (reduce #(if (pos? (compare %2 %1)) %2 %1) coll))
