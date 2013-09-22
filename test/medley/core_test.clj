@@ -21,6 +21,10 @@
   (is (= (map-vals inc {:a 1 :b 2})
          {:a 2 :b 3})))
 
+(deftest test-filter-keys
+  (is (= (filter-keys keyword? {"a" 1 :b 2})
+         {:b 2})))
+
 (deftest test-filter-vals
   (is (= (filter-vals even? {:a 1 :b 2})
          {:b 2})))

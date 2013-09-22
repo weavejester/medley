@@ -31,6 +31,14 @@
                           (transient (empty coll))
                           coll)))
 
+(defn filter-keys
+  "Filters an associate collection by a predicate function applied to the
+  keyss of the collection."
+  [pred coll]
+  (persistent! (reduce-kv #(if (pred %2) (assoc! %1 %2 %3) %1)
+                          (transient (empty coll))
+                          coll)))
+
 (defn filter-vals
   "Filters an associate collection by a predicate function applied to the
   values of the collection."
