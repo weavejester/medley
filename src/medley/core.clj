@@ -32,7 +32,8 @@
                           coll)))
 
 (defn filter-vals
-  "Returns the elements of an associative collection for which (pred value) returns true."
+  "Filters an associate collection by a predicate function applied to the
+  values of the collection."
   [pred coll]
   (persistent! (reduce-kv #(if (pred %3) (assoc! %1 %2 %3) %1)
                           (transient (empty coll))
