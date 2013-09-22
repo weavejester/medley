@@ -13,7 +13,7 @@ out of place in the core Clojure library.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.1.0"]
+    [medley "0.1.1"]
 
 ## Documentation
 
