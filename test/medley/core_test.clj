@@ -40,3 +40,9 @@
 (deftest test-queue?
   (is (queue? clojure.lang.PersistentQueue/EMPTY))
   (is (not (queue? []))))
+
+(deftest test-least
+  (is (= (least [3 2 5 -1 0 2]) -1)))
+
+(deftest test-greatest
+  (is (= (greatest [3 2 5 -1 0 2]) 5)))
