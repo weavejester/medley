@@ -30,6 +30,14 @@
   (is (= (filter-vals even? {:a 1 :b 2})
          {:b 2})))
 
+(deftest test-remove-keys
+  (is (= (remove-keys keyword? {"a" 1 :b 2})
+         {"a" 1})))
+
+(deftest test-remove-vals
+  (is (= (remove-vals even? {:a 1 :b 2})
+         {:a 1})))
+
 (deftest test-queue
   (testing "empty"
     (is (instance? clojure.lang.PersistentQueue (queue)))
