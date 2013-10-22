@@ -51,17 +51,13 @@
   "Returns a new associative collection of the items in coll for which
   (pred (key item)) returns false."
   [pred coll]
-  (persistent! (reduce-kv #(if-not (pred %2) (assoc! %1 %2 %3) %1)
-                          (transient (empty coll))
-                          coll)))
+  (filter-keys (complement pred) coll))
 
 (defn remove-vals
   "Returns a new associative collection of the items in coll for which
   (pred (val item)) returns false."
   [pred coll]
-  (persistent! (reduce-kv #(if-not (pred %3) (assoc! %1 %2 %3) %1)
-                          (transient (empty coll))
-                          coll)))
+  (filter-vals (complement pred) coll))
 
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
