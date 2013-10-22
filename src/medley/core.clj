@@ -32,18 +32,34 @@
                           coll)))
 
 (defn filter-keys
-  "Filters an associate collection by a predicate function applied to the
-  keyss of the collection."
+  "Returns a new associative collection of the items in coll for which
+  (pred (key item)) returns true."
   [pred coll]
   (persistent! (reduce-kv #(if (pred %2) (assoc! %1 %2 %3) %1)
                           (transient (empty coll))
                           coll)))
 
 (defn filter-vals
-  "Filters an associate collection by a predicate function applied to the
-  values of the collection."
+  "Returns a new associative collection of the items in coll for which
+  (pred (val item)) returns true."
   [pred coll]
   (persistent! (reduce-kv #(if (pred %3) (assoc! %1 %2 %3) %1)
+                          (transient (empty coll))
+                          coll)))
+
+(defn remove-keys
+  "Returns a new associative collection of the items in coll for which
+  (pred (key item)) returns false."
+  [pred coll]
+  (persistent! (reduce-kv #(if-not (pred %2) (assoc! %1 %2 %3) %1)
+                          (transient (empty coll))
+                          coll)))
+
+(defn remove-vals
+  "Returns a new associative collection of the items in coll for which
+  (pred (val item)) returns false."
+  [pred coll]
+  (persistent! (reduce-kv #(if-not (pred %3) (assoc! %1 %2 %3) %1)
                           (transient (empty coll))
                           coll)))
 
@@ -68,3 +84,11 @@
   function) in O(n) time."
   [coll]
   (reduce #(if (pos? (compare %2 %1)) %2 %1) coll))
+
+(defn mapply
+  "Applies a function f to the argument list formed by concatenating
+  everything but the last element of args with the last element of
+  args.  This is useful for applying a function that accepts keyword
+  arguments to a map."
+  [f & args]
+  (apply f (apply concat (butlast args) (last args))))
