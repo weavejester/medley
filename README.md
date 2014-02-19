@@ -15,7 +15,7 @@ out of place in the core Clojure library.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.1.3"]
+    [medley "0.1.4"]
 
 ## Documentation
 
