@@ -14,6 +14,11 @@
   (is (= (dissoc-in {:a {:b {:c 1}}} [:a :b :c])
          {:a {:b {}}})))
 
+(deftest test-assoc-some
+  (is (= (assoc-some {:a 1} :b 2) {:a 1 :b 2}))
+  (is (= (assoc-some {:a 1} :b nil) {:a 1}))
+  (is (= (assoc-some {:a 1} :b 2 :c nil :d 3) {:a 1 :b 2 :d 3})))
+
 (deftest test-map-keys
   (is (= (map-keys name {:a 1 :b 2})
          {"a" 1 "b" 2})))

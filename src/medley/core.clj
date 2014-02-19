@@ -17,6 +17,15 @@
   [m ks]
   (update-in m (butlast ks) dissoc (last ks)))
 
+(defn assoc-some
+  "Associates a key with a value in a map, if and only if the value is not nil."
+  ([m k v]
+     (if (nil? v) m (assoc m k v)))
+  ([m k v & kvs]
+     (reduce (fn [m [k v]] (assoc-some m k v))
+             (assoc-some m k v)
+             (partition 2 kvs))))
+
 (defn map-keys
   "Maps a function over the keys of an associative collection."
   [f coll]
