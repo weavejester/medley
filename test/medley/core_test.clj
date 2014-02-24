@@ -61,7 +61,7 @@
 (deftest test-greatest
   (is (= (greatest [3 2 5 -1 0 2]) 5)))
 
-(deftest mapply-test
+(deftest test-mapply
   (letfn [(foo [bar & {:keys [baz]}] [bar baz])]
     (is (= (mapply foo 0 {}) [0 nil])
         "should handle an empty map")
@@ -75,3 +75,12 @@
         "should not accept an incomplete argument list")
     (is (thrown? IllegalArgumentException (mapply foo 0))
         "should not accept a non-seq-non-nil as its final argument")))
+
+(deftest test-interleave-all
+  (is (= (interleave-all []) []))
+  (is (= (interleave-all [1 2 3]) [1 2 3]))
+  (is (= (interleave-all [1 2 3] [4 5 6]) [1 4 2 5 3 6]))
+  (is (= (interleave-all [1 2 3] [4 5 6] [7 8 9]) [1 4 7 2 5 8 3 6 9]))
+  (is (= (interleave-all [1 2] [3]) [1 3 2]))
+  (is (= (interleave-all [1 2 3] [4 5]) [1 4 2 5 3]))
+  (is (= (interleave-all [1] [2 3] [4 5 6]) [1 2 4 3 5 6])))
