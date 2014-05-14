@@ -169,3 +169,16 @@
        (or ~@(for [pred preds]
                `(~pred ~arg-sym))))))
 
+(defmacro %->
+  ""
+
+  [& forms]
+  
+  `(fn [%#]
+     (-> %#
+         ~@forms)))
+
+(defmacro %->> [& forms]
+  `(fn [%#]
+     (->> %#
+          ~@forms)))
