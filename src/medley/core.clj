@@ -140,3 +140,32 @@
                          (cons x (step (rest s) (conj seen fx)))))))
                  xs seen)))]
     (step coll #{})))
+
+(defmacro %and
+  "Given a list of predicates, returns a function taking an argument
+  that returns true if all of the predicates return true for that
+  argument. %and is lazy - if any predicate returns false, it doesn't
+  continue evaluating the others (like 'clojure.core/and')"
+  
+  [& preds]
+  
+  (let [arg-sym (gensym "arg")]
+    
+    `(fn [~arg-sym]
+       (and ~@(for [pred preds]
+                `(~pred ~arg-sym))))))
+
+(defmacro %or
+  "Given a list of predicates, returns a function taking an argument
+  that returns true if any of the predicates return true for that
+  argument. %and is lazy - if any predicate returns true, it doesn't
+  continue evaluating the others (like 'clojure.core/or')"
+
+  [& preds]
+  
+  (let [arg-sym (gensym "arg")]
+    
+    `(fn [~arg-sym]
+       (or ~@(for [pred preds]
+               `(~pred ~arg-sym))))))
+
