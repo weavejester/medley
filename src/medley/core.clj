@@ -50,7 +50,7 @@
 
 (defn filter-keys
   "Returns a new associative collection of the items in coll for which
-  (pred (key item)) returns true."
+  `(pred (key item))` returns true."
   [pred coll]
   (persistent! (reduce-kv #(if (pred %2) (assoc! %1 %2 %3) %1)
                           (transient (empty coll))
@@ -58,7 +58,7 @@
 
 (defn filter-vals
   "Returns a new associative collection of the items in coll for which
-  (pred (val item)) returns true."
+  `(pred (val item))` returns true."
   [pred coll]
   (persistent! (reduce-kv #(if (pred %3) (assoc! %1 %2 %3) %1)
                           (transient (empty coll))
@@ -66,13 +66,13 @@
 
 (defn remove-keys
   "Returns a new associative collection of the items in coll for which
-  (pred (key item)) returns false."
+  `(pred (key item))` returns false."
   [pred coll]
   (filter-keys (complement pred) coll))
 
 (defn remove-vals
   "Returns a new associative collection of the items in coll for which
-  (pred (val item)) returns false."
+  `(pred (val item))` returns false."
   [pred coll]
   (filter-vals (complement pred) coll))
 
