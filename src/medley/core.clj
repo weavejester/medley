@@ -1,5 +1,6 @@
 (ns medley.core
-  "A small collection of useful pure functions.")
+  "A small collection of useful pure functions that might not look out of place
+  in the clojure.core namespace.")
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
@@ -110,6 +111,7 @@
   "Returns a lazy seq of the first item in each coll, then the second, etc.
   Unlike clojure.core/interleave, the returned seq contains all items in the
   supplied collections, even if the collections are different sizes."
+  {:arglists '([& colls])}
   ([] ())
   ([c1] (lazy-seq c1))
   ([c1 c2]
