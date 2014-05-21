@@ -90,3 +90,11 @@
   (is (= (interleave-all [1 2] [3]) [1 3 2]))
   (is (= (interleave-all [1 2 3] [4 5]) [1 4 2 5 3]))
   (is (= (interleave-all [1] [2 3] [4 5 6]) [1 2 4 3 5 6])))
+
+(deftest test-distinct-by
+  (is (= (distinct-by count ["a" "ab" "c" "cd" "def"])
+         ["a" "ab" "def"]))
+  (is (= (distinct-by count [])
+         []))
+  (is (= (distinct-by first ["foo" "faa" "boom" "bar"])
+         ["foo" "boom"])))
