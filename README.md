@@ -16,7 +16,7 @@ itself to pure functions with very general use-cases.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.1.5"]
+    [medley "0.2.0"]
 
 ## Documentation
 
