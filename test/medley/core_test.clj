@@ -11,8 +11,14 @@
   (is (= (update {:a 5} :a + 2) {:a 7})))
 
 (deftest test-dissoc-in
+  (is (= (dissoc-in {:a {:b {:c 1 :d 2}}} [:a :b :c])
+         {:a {:b {:d 2}}}))
   (is (= (dissoc-in {:a {:b {:c 1}}} [:a :b :c])
-         {:a {:b {}}})))
+         {}))
+  (is (= (dissoc-in {:a {:b {:c 1} :d 2}} [:a :b :c])
+         {:a {:d 2}}))
+  (is (= (dissoc-in {:a 1} [])
+         {:a 1})))
 
 (deftest test-assoc-some
   (is (= (assoc-some {:a 1} :b 2) {:a 1 :b 2}))
