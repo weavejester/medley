@@ -170,7 +170,21 @@
                `(~pred ~arg-sym))))))
 
 (defmacro ->%
-  ""
+  "Creates an anonymous function, threading the parameter through the
+  forms provided as the first parameter.
+
+  Useful for getting around the restriction that you're not allowed to
+  have nested anonymous functions (of the #() variety), especially
+  when manipulating lists of maps - i.e.:
+
+  (let [table [{:a 1 :b [4 12]},
+               {:a 3 :b [8 35]}]]
+    (map (->% (update-in [:b] #(map inc %))
+              (assoc :c 8))
+         table))
+
+  ;; -> [{:a 1, :b [5 13], :c 8},
+  ;;     {:a 3, :b [9 36], :c 8}]"
 
   [& forms]
   
@@ -178,7 +192,24 @@
      (-> %#
          ~@forms)))
 
-(defmacro ->>% [& forms]
+(defmacro ->>%
+  "Creates an anonymous function, threading the parameter through the
+  forms provided as the last parameter.
+
+  Useful for getting around the restriction that you're not allowed to
+  have nested anonymous functions (of the #() variety), especially
+  when manipulating nested lists - i.e.:
+
+  (let [results [[3 5 8 12], [6 49 23 18]]]
+    (map (->>% (map #(nth % 2))
+               (* 2))
+
+         results)
+
+  ;; -> [24 36]"
+
+  [& forms]
+  
   `(fn [%#]
      (->> %#
           ~@forms)))
