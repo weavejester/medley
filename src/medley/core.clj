@@ -204,7 +204,7 @@
     (map (->>% (map #(nth % 2))
                (* 2))
 
-         results)
+         results))
 
   ;; -> [24 36]"
 
