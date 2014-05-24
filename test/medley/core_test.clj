@@ -98,3 +98,41 @@
          []))
   (is (= (distinct-by first ["foo" "faa" "boom" "bar"])
          ["foo" "boom"])))
+
+(deftest test-all-macro
+  (is (= (filter (all even? #(zero? (mod % 3)))
+                 (range 20))
+         [0 6 12 18]))
+  
+  (is (= (filter (all) (range 3))
+         (range 3))))
+
+(deftest test-any-macro
+  (is (= (remove (any even? #(zero? (mod % 3)))
+                 (range 10))
+         [1 5 7]))
+
+  (is (= (filter (any) (range 3))
+         [])))
+
+(deftest test->%
+  (is (= (let [table [{:a 1 :b [4 12]},
+                      {:a 3 :b [8 35]}]]
+           (map (->% (update-in [:b] #(map inc %))
+                     (assoc :c 8))
+                table))
+
+         [{:a 1, :b [5 13], :c 8}
+          {:a 3, :b [9 36], :c 8}])))
+
+(deftest test->>%
+  (is (= (let [results [[3 5 8 12], [6 45 23 18]]]
+           (map (->>% (filter #(zero? (mod % 3)))
+                      (map #(* 2 %)))
+                results))
+
+         [[6 24]
+          [12 90 36]])))
+
+
+
