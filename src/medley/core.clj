@@ -141,10 +141,10 @@
                  xs seen)))]
     (step coll #{})))
 
-(defmacro %and
+(defmacro and%
   "Given a list of predicates, returns a function taking an argument
   that returns true if all of the predicates return true for that
-  argument. %and is lazy - if any predicate returns false, it doesn't
+  argument. and% is lazy - if any predicate returns false, it doesn't
   continue evaluating the others (like 'clojure.core/and')"
   
   [& preds]
@@ -155,10 +155,10 @@
        (and ~@(for [pred preds]
                 `(~pred ~arg-sym))))))
 
-(defmacro %or
+(defmacro or%
   "Given a list of predicates, returns a function taking an argument
   that returns true if any of the predicates return true for that
-  argument. %and is lazy - if any predicate returns true, it doesn't
+  argument. or% is lazy - if any predicate returns true, it doesn't
   continue evaluating the others (like 'clojure.core/or')"
 
   [& preds]
@@ -169,7 +169,7 @@
        (or ~@(for [pred preds]
                `(~pred ~arg-sym))))))
 
-(defmacro %->
+(defmacro ->%
   ""
 
   [& forms]
@@ -178,7 +178,7 @@
      (-> %#
          ~@forms)))
 
-(defmacro %->> [& forms]
+(defmacro ->>% [& forms]
   `(fn [%#]
      (->> %#
           ~@forms)))
