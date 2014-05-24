@@ -199,14 +199,13 @@
   Useful for getting around the restriction that you're not allowed to
   have nested anonymous functions (of the #() variety), especially
   when manipulating nested lists - i.e.:
-
-  (let [results [[3 5 8 12], [6 49 23 18]]]
-    (map (->>% (map #(nth % 2))
-               (* 2))
-
+  
+  (let [results [[3 5 8 12], [6 45 23 18]]]
+    (map (->>% (filter #(zero? (mod % 3)))
+               (map #(* 2 %)))
          results))
 
-  ;; -> [24 36]"
+  ;; -> [[6 24], [12 90 36]]"
 
   [& forms]
   
