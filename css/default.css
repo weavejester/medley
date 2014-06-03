@@ -133,6 +133,7 @@ h2 {
 .sidebar li a, .sidebar li .no-link {
     border-left: 3px solid transparent;
     padding: 0 7px;
+    white-space: nowrap;
 }
 
 .sidebar li .no-link {
