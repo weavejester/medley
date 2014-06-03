@@ -61,6 +61,13 @@
   (is (queue? clojure.lang.PersistentQueue/EMPTY))
   (is (not (queue? []))))
 
+(deftest test-boolean?
+  (is (boolean? true))
+  (is (boolean? false))
+  (is (not (boolean? nil)))
+  (is (not (boolean? "foo")))
+  (is (not (boolean? 1))))
+
 (deftest test-least
   (is (= (least [3 2 5 -1 0 2]) -1)))
 

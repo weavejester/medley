@@ -87,6 +87,11 @@
   [x]
   (instance? clojure.lang.PersistentQueue x))
 
+(defn boolean?
+  "Returns true if x is a boolean."
+  [x]
+  (instance? Boolean x))
+
 (defn least
   "Find the least element of the collection (as defined by the compare
   function) in O(n) time."
