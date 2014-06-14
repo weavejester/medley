@@ -11,7 +11,8 @@
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
           :src-dir-uri "http://github.com/weavejester/medley/blob/0.2.1/"
-          :src-linenum-anchor-prefix "L"}
+          :src-linenum-anchor-prefix "L"
+          :src-uri-mapping {#"target/generated/src" #(str "src/" % "x")}}
   :cljx
   {:builds
    [{:source-paths ["src"], :output-path "target/generated/src", :rules :clj}
