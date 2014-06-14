@@ -8,5 +8,7 @@
   :codox {:defaults {:doc/format :markdown}
           :src-dir-uri "http://github.com/weavejester/medley/blob/0.2.1/"
           :src-linenum-anchor-prefix "L"}
+  :aliases {"test-all" ["with-profile" "default:+1.6" "test"]}
   :profiles
-  {:dev {:dependencies [[criterium "0.4.2"]]}})
+  {:dev {:dependencies [[criterium "0.4.2"]]}
+   :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}})
