@@ -79,18 +79,21 @@
 
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
-  ([] clojure.lang.PersistentQueue/EMPTY)
+  ([] #+clj clojure.lang.PersistentQueue/EMPTY
+      #+cljs cljs.core.PersistentQueue.EMPTY)
   ([coll] (into (queue) coll)))
 
 (defn queue?
   "Returns true if x implements clojure.lang.PersistentQueue."
   [x]
-  (instance? clojure.lang.PersistentQueue x))
+  (instance? #+clj clojure.lang.PersistentQueue
+             #+cljs cljs.core.PersistentQueue x))
 
 (defn boolean?
   "Returns true if x is a boolean."
   [x]
-  (instance? Boolean x))
+  #+clj  (instance? Boolean x)
+  #+cljs (or (true? x) (false? x)))
 
 (defn least
   "Find the least element of the collection (as defined by the compare
