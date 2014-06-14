@@ -1,6 +1,6 @@
 # Medley
 
-[![Build Status](https://travis-ci.org/weavejester/medley.png?branch=master)](https://travis-ci.org/weavejester/medley)
+[![Build Status](https://travis-ci.org/weavejester/medley.svg?branch=master)](https://travis-ci.org/weavejester/medley)
 
 Medley is a lightweight Clojure library of useful, pure functions that
 are "missing" from clojure.core.
