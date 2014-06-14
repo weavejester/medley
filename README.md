@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/weavejester/medley.svg?branch=master)](https://travis-ci.org/weavejester/medley)
 
-Medley is a lightweight Clojure library of useful, pure functions that
-are "missing" from clojure.core.
+Medley is a lightweight Clojure/ClojureScript library of useful, pure
+functions that are "missing" from clojure.core.
 
 Unlike [flatland/useful][1], Medley does not attempt to be
 comprehensive, and unlike [Prismatic/plumbing][2], Medley limits
