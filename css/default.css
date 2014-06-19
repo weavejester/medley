@@ -257,6 +257,11 @@ h2 {
 .members .public {
     margin-top: 0;
     margin-bottom: 1em;
+    padding-top: 6px;
+}
+
+.members .public:first-child {
+    padding-top: 0;
 }
 
 .public h4.type,
@@ -408,6 +413,28 @@ p {
 
 .doc table th {
     background: #f2f2f2;
+}
+
+.doc dl {
+    margin: 0 10px 20px 10px;
+}
+
+.doc dl dt {
+    font-weight: bold;
+    margin: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.doc dl dd {
+    padding: 5px 0;
+    margin: 0 0 5px 10px;
+}
+
+.doc abbr {
+    border-bottom: 1px dotted #333;
+    font-variant: none
+    cursor: help;
 }
 
 .src-link a {
