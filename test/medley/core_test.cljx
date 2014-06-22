@@ -106,5 +106,11 @@
          ["foo" "boom"])))
 
 (deftest test-take-upto
-  (is (= (m/take-upto zero? [1 2 0 3]) [1 2 0]))
-  (is (= (m/take-upto even? [1 2 0 3]) [1 2])))
+  (is (= (m/take-upto zero? [1 2 3 0 4 5 6]) [1 2 3 0]))
+  (is (= (m/take-upto zero? [0 1 2 3 4 5 6]) [0]))
+  (is (= (m/take-upto zero? [1 2 3 4 5 6 7]) [1 2 3 4 5 6 7])))
+
+(deftest test-drop-upto
+  (is (= (m/drop-upto zero? [1 2 3 0 4 5 6]) [4 5 6]))
+  (is (= (m/drop-upto zero? [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
+  (is (= (m/drop-upto zero? [1 2 3 4 5 6 7]) [])))

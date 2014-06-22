@@ -158,3 +158,10 @@
      (if (pred (first s))
        (list (first s))
        (cons (first s) (take-upto pred (rest s)))))))
+
+(defn drop-upto
+  "Returns a lazy sequence of the items in coll starting from the first item
+  after the item for which (pred item) returns true. pred must be free of
+  side-effects."
+  [pred coll]
+  (rest (drop-while (complement pred) coll)))
