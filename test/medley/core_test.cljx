@@ -105,6 +105,6 @@
   (is (= (m/distinct-by first ["foo" "faa" "boom" "bar"])
          ["foo" "boom"])))
 
-(deftest test-take-until
-  (is (= (m/take-until zero? [1 2 0 3]) [1 2 0]))
-  (is (= (m/take-until even? [1 2 0 3]) [1 2])))
+(deftest test-take-upto
+  (is (= (m/take-upto zero? [1 2 0 3]) [1 2 0]))
+  (is (= (m/take-upto even? [1 2 0 3]) [1 2])))
