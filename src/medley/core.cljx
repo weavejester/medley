@@ -151,8 +151,7 @@
 
 (defn take-upto
   "Returns a lazy sequence of successive items from coll up to and including
-  the first item for which (pred item) returns true. pred must be free of
-  side-effects."
+  the first item for which `(pred item)` returns true."
   [pred coll]
   (lazy-seq
    (when-let [s (seq coll)]
@@ -161,8 +160,7 @@
        (cons (first s) (take-upto pred (rest s)))))))
 
 (defn drop-upto
-  "Returns a lazy sequence of the items in coll starting from the first item
-  after the item for which (pred item) returns true. pred must be free of
-  side-effects."
+  "Returns a lazy sequence of the items in coll starting *after* the first item
+  for which `(pred item)` returns true."
   [pred coll]
   (rest (drop-while (complement pred) coll)))
