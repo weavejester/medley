@@ -9,8 +9,12 @@
 
 (defn update
   "Updates a value in a map with a function."
-  [m k f & args]
-  (assoc m k (apply f (m k) args)))
+  {:arglists '([m k f & args])}
+  ([m k f] (assoc m k (f (get m k))))
+  ([m k f a1] (assoc m k (f (get m k) a1)))
+  ([m k f a1 a2] (assoc m k (f (get m k) a1 a2)))
+  ([m k f a1 a2 a3] (assoc m k (f (get m k) a1 a2 a3)))
+  ([m k f a1 a2 a3 & args] (assoc m k (apply f (get m k) a1 a2 a3 args))))
 
 (defn dissoc-in
   "Dissociate a value in a nested assocative structure, identified by a sequence

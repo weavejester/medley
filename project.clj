@@ -32,5 +32,5 @@
    "test-all"  ["do" ["with-profile" "default:+1.6" "test"] ["cljsbuild" "test"]]}
   :profiles
   {:provided {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
-   :dev {:dependencies [[criterium "0.4.2"]]}
+   :dev {:dependencies [[criterium "0.4.2"]], :jvm-opts ^:replace {}}
    :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}})

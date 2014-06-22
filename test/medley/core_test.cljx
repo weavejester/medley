@@ -9,7 +9,11 @@
   (is (nil? (m/find-first even? [7 3 3 7 3]))))
 
 (deftest test-update
-  (is (= (m/update {:a 5} :a + 2) {:a 7})))
+  (is (= (m/update {:a 5} :a inc) {:a 6}))
+  (is (= (m/update {:a 5} :a + 1) {:a 6}))
+  (is (= (m/update {:a 5} :a + 1 2) {:a 8}))
+  (is (= (m/update {:a 5} :a + 1 2 3) {:a 11}))
+  (is (= (m/update {:a 5} :a + 1 2 3 4) {:a 15})))
 
 (deftest test-dissoc-in
   (is (= (m/dissoc-in {:a {:b {:c 1 :d 2}}} [:a :b :c])
