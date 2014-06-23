@@ -10,7 +10,7 @@
             [com.cemerick/clojurescript.test "0.3.1"]]
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
-          :src-dir-uri "http://github.com/weavejester/medley/blob/0.3.1/"
+          :src-dir-uri "http://github.com/weavejester/medley/blob/0.4.0/"
           :src-linenum-anchor-prefix "L"
           :src-uri-mapping {#"target/generated/src" #(str "src/" % "x")}}
   :cljx
