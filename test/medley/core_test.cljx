@@ -122,3 +122,9 @@
   (is (= (m/drop-upto zero? [1 2 3 0 4 5 6]) [4 5 6]))
   (is (= (m/drop-upto zero? [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
   (is (= (m/drop-upto zero? [1 2 3 4 5 6 7]) [])))
+
+(deftest test-indexed
+  (is (= (m/indexed [:a :b :c :d])
+         [[0 :a] [1 :b] [2 :c] [3 :d]]))
+  (is (= (m/indexed [])
+         [])))

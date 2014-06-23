@@ -168,3 +168,9 @@
   for which `(pred item)` returns true."
   [pred coll]
   (rest (drop-while (complement pred) coll)))
+
+(defn indexed
+  "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
+  value in coll, and index its position starting from zero."
+  [coll]
+  (map-indexed vector coll))
