@@ -160,9 +160,8 @@
   [pred coll]
   (lazy-seq
    (when-let [s (seq coll)]
-     (if (pred (first s))
-       (list (first s))
-       (cons (first s) (take-upto pred (rest s)))))))
+     (let [x (first s)]
+       (cons x (if-not (pred x) (take-upto pred (rest s))))))))
 
 (defn drop-upto
   "Returns a lazy sequence of the items in coll starting *after* the first item
