@@ -83,6 +83,10 @@
   (is (= (m/greatest [3 2 5 -1 0 2]) 5)))
 
 (deftest test-mapply
+  (letfn [(foo [& {:keys [bar]}] bar)]
+    (is (= (m/mapply foo {}) nil))
+    (is (= (m/mapply foo {:baz 1}) nil))
+    (is (= (m/mapply foo {:bar 1}) 1)))
   (letfn [(foo [bar & {:keys [baz]}] [bar baz])]
     (is (= (m/mapply foo 0 {}) [0 nil]))
     (is (= (m/mapply foo 0 {:baz 1}) [0 1]))

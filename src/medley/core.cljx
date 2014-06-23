@@ -116,8 +116,9 @@
   everything but the last element of args with the last element of
   args. This is useful for applying a function that accepts keyword
   arguments to a map."
-  [f & args]
-  (apply f (apply concat (butlast args) (last args))))
+  {:arglists '([f & args])}
+  ([f m]        (apply f (apply concat m)))
+  ([f a & args] (apply f a (apply concat (butlast args) (last args)))))
 
 (defn interleave-all
   "Returns a lazy seq of the first item in each coll, then the second, etc.
