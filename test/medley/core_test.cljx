@@ -138,3 +138,17 @@
   #+clj (is (= (m/abs 1/2) 1/2))
   #+clj (is (= (m/abs 3N) 3N))
   #+clj (is (= (m/abs -4N) 4N)))
+
+(deftest test-deref-swap!
+  (let [a (atom 0)]
+    (is (= (m/deref-swap! a inc) 0))
+    (is (= @a 1))
+    (is (= (m/deref-swap! a inc) 1))
+    (is (= @a 2))))
+
+(deftest test-deref-reset!
+  (let [a (atom 0)]
+    (is (= (m/deref-reset! a 3) 0))
+    (is (= @a 3))
+    (is (= (m/deref-reset! a 1) 3))
+    (is (= @a 1))))

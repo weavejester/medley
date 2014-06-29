@@ -179,3 +179,23 @@
   "Returns the absolute value of a number."
   [x]
   (if (neg? x) (* x -1) x))
+
+(defn deref-swap!
+  "Atomically swaps the value of the atom to be `(apply f x args)`, where x is
+  the current value of the atom, then returns the original value of the atom.
+  This function therefore acts like an atomic `deref` then `swap!`."
+  {:arglists '([atom f & args])}
+  ([atom f]
+     (loop []
+       (let [value @atom]
+         (if (compare-and-set! atom value (f value))
+           value
+           (recur)))))
+  ([atom f & args]
+     (deref-swap! atom #(apply f % args))))
+
+(defn deref-reset!
+  "Sets the value of the atom without regard for the current value, then returns
+  the original value of the atom. See also: [[deref-swap!]]."
+  [atom newval]
+  (deref-swap! atom (constantly newval)))
