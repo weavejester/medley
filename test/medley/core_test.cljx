@@ -128,3 +128,13 @@
          [[0 :a] [1 :b] [2 :c] [3 :d]]))
   (is (= (m/indexed [])
          [])))
+
+(deftest test-abs
+  (is (= (m/abs -3) 3))
+  (is (= (m/abs 2) 2))
+  (is (= (m/abs -2.1) 2.1))
+  (is (= (m/abs 1.8) 1.8))
+  #+clj (is (= (m/abs -1/3) 1/3))
+  #+clj (is (= (m/abs 1/2) 1/2))
+  #+clj (is (= (m/abs 3N) 3N))
+  #+clj (is (= (m/abs -4N) 4N)))

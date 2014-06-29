@@ -174,3 +174,8 @@
   value in coll, and index its position starting from zero."
   [coll]
   (map-indexed vector coll))
+
+(defn abs
+  "Returns the absolute value of a number."
+  [x]
+  (if (neg? x) (* x -1) x))
