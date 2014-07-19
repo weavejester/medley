@@ -185,4 +185,13 @@
          (m/map-tree
           #(update-in % [:count] + 1)
           {:count 0
-          :children [{:count 3} {:count 7}]}))))
+          :children [{:count 3} {:count 7}]})))
+
+  (is (= {:count 1
+          :children {:dog {:count 4} :cat {:count 8}}}
+
+         (m/map-tree
+          #(update-in % [:count] + 1)
+          {:count 0
+          :children {:dog {:count 3} :cat {:count 7}}})))
+  )

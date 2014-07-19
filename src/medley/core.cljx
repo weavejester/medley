@@ -210,7 +210,7 @@
   "Returns the vector abscent the first element. Falls throught to
 rest if the parameter is not a Vector"
   [vec]
-  (if (and (vector? vec) (-> vec empty? not))
+  (if (and (vector? vec) (seq vec))
     (subvec vec 1)
     (rest vec)))
 
@@ -246,8 +246,8 @@ Find the children using child-key and if child-key is missing, use :children"
             (map? child)
             (assoc tree child-key (into {} 
                                         (map (fn [[k v]]
-                                               [k (map-tree f v child-key)]))
-                                        child))
+                                               [k (map-tree f v child-key)])
+                                             child)))
 
             (sequential? child) (assoc tree child-key 
                                        (map #(map-tree f % child-key) child))
