@@ -1,5 +1,6 @@
 (ns medley.core-test
   #+clj (:import [clojure.lang ArityException])
+  #+cljs (:require-macros [medley.core :as m])
   (:require #+clj  [clojure.test :refer :all]
             #+cljs [cemerick.cljs.test :as t :refer-macros [is deftest testing]]
                    [medley.core :as m]))
@@ -152,3 +153,46 @@
     (is (= @a 3))
     (is (= (m/deref-reset! a 1) 3))
     (is (= @a 1))))
+
+(deftest test-mapcatv
+  (let [empt (m/mapcatv identity nil)
+        one [1 2 3]
+        one-mapped (m/mapcatv (fn [x] [x]) one)]
+    (is (= [] empt))
+    (is (= one one-mapped))))
+        
+(deftest test-someor
+  (is (= false (m/some-or false 33)))
+  (is (= nil (m/some-or)))
+  (is (= 33 (m/some-or 33)))
+  )
+
+(deftest test-restv
+  (is (= [1] (m/restv [0 1])))
+  (is (= '(1) (m/restv '(0 1))))
+  (is (= [2 3 4] (m/restv [1 2 3 4])))
+  )
+
+(deftest test-concatv
+  (is (= [1 2 3] (m/concatv [1] '(2 3))))
+  (is (= [1 2 3] (m/concatv [1] [2] [3])))
+  (is (= [1 2 3] (m/concatv [1] [2 3])))
+  )
+
+(deftest test-tree-map
+  (is (= {:count 1
+          :children [{:count 4} {:count 8}]}
+
+         (m/map-tree
+          #(update-in % [:count] + 1)
+          {:count 0
+          :children [{:count 3} {:count 7}]})))
+
+  (is (= {:count 1
+          :children {:dog {:count 4} :cat {:count 8}}}
+
+         (m/map-tree
+          #(update-in % [:count] + 1)
+          {:count 0
+          :children {:dog {:count 3} :cat {:count 7}}})))
+  )
