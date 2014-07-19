@@ -164,7 +164,8 @@
 (deftest test-someor
   (is (= false (m/some-or false 33)))
   (is (= nil (m/some-or)))
-  (is (= 33 (m/some-or 33))))
+  (is (= 33 (m/some-or 33)))
+  )
 
 (deftest test-restv
   (is (= [1] (m/restv [0 1])))

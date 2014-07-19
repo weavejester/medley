@@ -269,4 +269,4 @@ Find the children using child-key and if child-key is missing, use :children"
   ([x] x)
   ([x & other]
      `(let [or# ~x]
-        (if (nil? or#) (some-or ~other) or#))))
+        (if (nil? or#) (some-or ~@other) or#))))
