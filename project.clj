@@ -6,7 +6,6 @@
   :dependencies [[org.clojure/clojure "1.5.1"]]
   :plugins [[codox "0.8.10"]
             [lein-cljsbuild "1.0.3"]
-            [com.keminglabs/cljx "0.4.0"]
             [com.cemerick/clojurescript.test "0.3.1"]]
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
@@ -32,5 +31,7 @@
    "test-all"  ["do" ["with-profile" "default:+1.6" "test"] ["cljsbuild" "test"]]}
   :profiles
   {:provided {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
-   :dev {:dependencies [[criterium "0.4.2"]], :jvm-opts ^:replace {}}
+   :dev {:dependencies [[criterium "0.4.2"]]
+         :jvm-opts ^:replace {}
+         :plugins [[com.keminglabs/cljx "0.4.0"]]}
    :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}})
