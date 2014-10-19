@@ -28,10 +28,12 @@
    :test-commands {"unit-tests" ["phantomjs" :runner "target/main.js"]}}
   :aliases
   {"test-cljs" ["do" ["cljx" "once"] ["cljsbuild" "test"]]
-   "test-all"  ["do" ["with-profile" "default:+1.6" "test"] ["cljsbuild" "test"]]}
+   "test-all"  ["do" ["with-profile" "default:+1.6:+1.7" "test"]
+                     ["cljsbuild" "test"]]}
   :profiles
   {:provided {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
    :dev {:dependencies [[criterium "0.4.2"]]
          :jvm-opts ^:replace {}
          :plugins [[com.keminglabs/cljx "0.4.0"]]}
-   :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}})
+   :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
+   :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha2"]]}})
