@@ -27,7 +27,8 @@
      :compiler {:output-to "target/main.js"}}]
    :test-commands {"unit-tests" ["phantomjs" :runner "target/main.js"]}}
   :aliases
-  {"test-cljs" ["do" ["cljx" "once"] ["cljsbuild" "test"]]
+  {"deploy"    ["with-profile" "-dev" "deploy"]
+   "test-cljs" ["do" ["cljx" "once"] ["cljsbuild" "test"]]
    "test-all"  ["do" ["with-profile" "default:+1.6:+1.7" "test"]
                      ["cljsbuild" "test"]]}
   :profiles
