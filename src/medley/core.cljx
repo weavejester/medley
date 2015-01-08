@@ -34,11 +34,11 @@
 (defn assoc-some
   "Associates a key with a value in a map, if and only if the value is not nil."
   ([m k v]
-     (if (nil? v) m (assoc m k v)))
+   (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
-     (reduce (fn [m [k v]] (assoc-some m k v))
-             (assoc-some m k v)
-             (partition 2 kvs))))
+   (reduce (fn [m [k v]] (assoc-some m k v))
+           (assoc-some m k v)
+           (partition 2 kvs))))
 
 (defn- editable? [coll]
   #+clj  (instance? clojure.lang.IEditableCollection coll)
@@ -130,16 +130,16 @@
   ([] ())
   ([c1] (lazy-seq c1))
   ([c1 c2]
-     (lazy-seq
-      (let [s1 (seq c1), s2 (seq c2)]
-        (if (and s1 s2)
-         (cons (first s1) (cons (first s2) (interleave-all (rest s1) (rest s2))))
-         (or s1 s2)))))
+   (lazy-seq
+    (let [s1 (seq c1), s2 (seq c2)]
+      (if (and s1 s2)
+        (cons (first s1) (cons (first s2) (interleave-all (rest s1) (rest s2))))
+        (or s1 s2)))))
   ([c1 c2 & colls]
-     (lazy-seq
-      (let [ss (remove nil? (map seq (conj colls c2 c1)))]
-        (if (seq ss)
-          (concat (map first ss) (apply interleave-all (map rest ss))))))))
+   (lazy-seq
+    (let [ss (remove nil? (map seq (conj colls c2 c1)))]
+      (if (seq ss)
+        (concat (map first ss) (apply interleave-all (map rest ss))))))))
 
 (defn distinct-by
   "Returns a lazy sequence of the elements of coll, removing any elements that
@@ -188,13 +188,13 @@
   This function therefore acts like an atomic `deref` then `swap!`."
   {:arglists '([atom f & args])}
   ([atom f]
-     (loop []
-       (let [value @atom]
-         (if (compare-and-set! atom value (f value))
-           value
-           (recur)))))
+   (loop []
+     (let [value @atom]
+       (if (compare-and-set! atom value (f value))
+         value
+         (recur)))))
   ([atom f & args]
-     (deref-swap! atom #(apply f % args))))
+   (deref-swap! atom #(apply f % args))))
 
 (defn deref-reset!
   "Sets the value of the atom without regard for the current value, then returns
