@@ -102,16 +102,18 @@
   #+cljs (or (true? x) (false? x)))
 
 (defn least
-  "Find the least element of the collection (as defined by the compare
-  function) in O(n) time."
-  [coll]
-  (reduce #(if (neg? (compare %2 %1)) %2 %1) coll))
+  "Return the least argument (as defined by the compare function) in O(n) time."
+  ([] nil)
+  ([a] a)
+  ([a b] (if (neg? (compare a b)) a b))
+  ([a b & more] (reduce least a (cons b more))))
 
 (defn greatest
-  "Find the greatest element of the collection (as defined by the compare
-  function) in O(n) time."
-  [coll]
-  (reduce #(if (pos? (compare %2 %1)) %2 %1) coll))
+  "Find the greatest argument (as defined by the compare function) in O(n) time."
+  ([] nil)
+  ([a] a)
+  ([a b] (if (pos? (compare a b)) a b))
+  ([a b & more] (reduce greatest a (cons b more))))
 
 (defn mapply
   "Applies a function f to the argument list formed by concatenating

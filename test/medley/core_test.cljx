@@ -62,7 +62,9 @@
 
 (deftest test-remove-vals
   (is (= (m/remove-vals even? {:a 1 :b 2})
-         {:a 1})))
+         {:a 1}))
+  (is (= (m/remove-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
+         {"a" 1})))
 
 (deftest test-queue
   (testing "empty"
@@ -87,10 +89,16 @@
   (is (not (m/boolean? 1))))
 
 (deftest test-least
-  (is (= (m/least [3 2 5 -1 0 2]) -1)))
+  (is (= (m/least) nil))
+  (is (= (m/least "a") "a"))
+  (is (= (m/least "a" "b") "a"))
+  (is (= (m/least 3 2 5 -1 0 2) -1)))
 
 (deftest test-greatest
-  (is (= (m/greatest [3 2 5 -1 0 2]) 5)))
+  (is (= (m/greatest) nil))
+  (is (= (m/greatest "a") "a"))
+  (is (= (m/greatest "a" "b") "b"))
+  (is (= (m/greatest 3 2 5 -1 0 2) 5)))
 
 (deftest test-mapply
   (letfn [(foo [& {:keys [bar]}] bar)]
