@@ -18,6 +18,7 @@
     {:source-paths ["test"], :output-path "target/generated/test", :rules :clj}
     {:source-paths ["src"], :output-path "target/generated/src", :rules :cljs}
     {:source-paths ["test"], :output-path "target/generated/test", :rules :cljs}]}
+  :prep-tasks [["cljx" "once"]]
   :source-paths ["src" "target/generated/src"]
   :test-paths   ["test" "target/generated/test"]
   :cljsbuild
