@@ -33,7 +33,7 @@
                      ["with-profile" "default:+1.6:+1.7" "test"]
                      ["with-profile" "+1.6" "cljsbuild" "test"]]}
   :profiles
-  {:provided {:dependencies [[org.clojure/clojurescript "0.0-2665"]]}
+  {:provided {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
    :dev {:dependencies [[criterium "0.4.3"]]
          :jvm-opts ^:replace {}
          :plugins [[com.keminglabs/cljx "0.5.0"]]}
