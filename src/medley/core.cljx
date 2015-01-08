@@ -40,35 +40,36 @@
              (assoc-some m k v)
              (partition 2 kvs))))
 
+(defn- editable? [coll]
+  #+clj  (instance? clojure.lang.IEditableCollection coll)
+  #+cljs (satisfies? cljs.core.IEditableCollection coll))
+
+(defn- reduce-map [f coll]
+  (if (editable? coll)
+    (persistent! (reduce-kv (f assoc!) (transient (empty coll)) coll))
+    (reduce-kv (f assoc) (empty coll) coll)))
+
 (defn map-keys
   "Maps a function over the keys of an associative collection."
   [f coll]
-  (persistent! (reduce-kv #(assoc! %1 (f %2) %3)
-                          (transient (empty coll))
-                          coll)))
+  (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll))
 
 (defn map-vals
   "Maps a function over the values of an associative collection."
   [f coll]
-  (persistent! (reduce-kv #(assoc! %1 %2 (f %3))
-                          (transient (empty coll))
-                          coll)))
+  (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
 
 (defn filter-keys
   "Returns a new associative collection of the items in coll for which
   `(pred (key item))` returns true."
   [pred coll]
-  (persistent! (reduce-kv #(if (pred %2) (assoc! %1 %2 %3) %1)
-                          (transient (empty coll))
-                          coll)))
+  (reduce-map (fn [xf] (fn [m k v] (if (pred k) (xf m k v) m))) coll))
 
 (defn filter-vals
   "Returns a new associative collection of the items in coll for which
   `(pred (val item))` returns true."
   [pred coll]
-  (persistent! (reduce-kv #(if (pred %3) (assoc! %1 %2 %3) %1)
-                          (transient (empty coll))
-                          coll)))
+  (reduce-map (fn [xf] (fn [m k v] (if (pred v) (xf m k v) m))) coll))
 
 (defn remove-keys
   "Returns a new associative collection of the items in coll for which

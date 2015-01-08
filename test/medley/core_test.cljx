@@ -32,22 +32,32 @@
 
 (deftest test-map-keys
   (is (= (m/map-keys name {:a 1 :b 2})
-         {"a" 1 "b" 2})))
+         {"a" 1 "b" 2}))
+  (is (= (m/map-keys name (sorted-map :a 1 :b 2))
+         (sorted-map "a" 1 "b" 2))))
 
 (deftest test-map-vals
   (is (= (m/map-vals inc {:a 1 :b 2})
-         {:a 2 :b 3})))
+         {:a 2 :b 3}))
+  (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
+         (sorted-map :a 2 :b 3))))
 
 (deftest test-filter-keys
   (is (= (m/filter-keys keyword? {"a" 1 :b 2})
-         {:b 2})))
+         {:b 2}))
+  (is (= (m/filter-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
+         (sorted-map "b" 2))))
 
 (deftest test-filter-vals
   (is (= (m/filter-vals even? {:a 1 :b 2})
-         {:b 2})))
+         {:b 2}))
+  (is (= (m/filter-vals even? (sorted-map :a 1 :b 2))
+         (sorted-map :b 2))))
 
 (deftest test-remove-keys
   (is (= (m/remove-keys keyword? {"a" 1 :b 2})
+         {"a" 1}))
+  (is (= (m/remove-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
          {"a" 1})))
 
 (deftest test-remove-vals
