@@ -58,6 +58,12 @@
   (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
          (sorted-map :a 2 :b 3))))
 
+(deftest test-filter-kv
+  (is (= (m/filter-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
+         {:b 2}))
+  (is (= (m/filter-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
+         (sorted-map "b" 2))))
+
 (deftest test-filter-keys
   (is (= (m/filter-keys keyword? {"a" 1 :b 2})
          {:b 2}))
@@ -69,6 +75,12 @@
          {:b 2}))
   (is (= (m/filter-vals even? (sorted-map :a 1 :b 2))
          (sorted-map :b 2))))
+
+(deftest test-remove-kv
+  (is (= (m/remove-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
+         {"a" 1 :c "d"}))
+  (is (= (m/remove-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
+         (sorted-map "a" 1))))
 
 (deftest test-remove-keys
   (is (= (m/remove-keys keyword? {"a" 1 :b 2})

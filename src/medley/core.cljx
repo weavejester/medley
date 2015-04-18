@@ -70,6 +70,12 @@
   [f coll]
   (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
 
+(defn filter-kv
+  "Returns a new associative collection of the items in coll for which
+  `(pred (key item) (val item))` returns true."
+  [pred coll]
+  (reduce-map (fn [xf] (fn [m k v] (if (pred k v) (xf m k v) m))) coll))
+
 (defn filter-keys
   "Returns a new associative collection of the items in coll for which
   `(pred (key item))` returns true."
@@ -81,6 +87,12 @@
   `(pred (val item))` returns true."
   [pred coll]
   (reduce-map (fn [xf] (fn [m k v] (if (pred v) (xf m k v) m))) coll))
+
+(defn remove-kv
+  "Returns a new associative collection of the items in coll for which
+  `(pred (key item) (val item))` returns false."
+  [pred coll]
+  (filter-kv (complement pred) coll))
 
 (defn remove-keys
   "Returns a new associative collection of the items in coll for which
