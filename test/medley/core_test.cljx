@@ -30,6 +30,14 @@
   (is (= (m/assoc-some {:a 1} :b nil) {:a 1}))
   (is (= (m/assoc-some {:a 1} :b 2 :c nil :d 3) {:a 1 :b 2 :d 3})))
 
+(deftest test-map-entry
+  (is (= (key (m/map-entry :a 1)) :a))
+  (is (= (val (m/map-entry :a 1)) 1))
+  (is (= (first  (m/map-entry :a 1)) :a))
+  (is (= (second (m/map-entry :a 1)) 1))
+  (is (= (type (m/map-entry :a 1))
+         (type (first {:a 1})))))
+
 (deftest test-map-keys
   (is (= (m/map-keys name {:a 1 :b 2})
          {"a" 1 "b" 2}))

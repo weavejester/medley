@@ -49,6 +49,10 @@
     (persistent! (reduce-kv (f assoc!) (transient (empty coll)) coll))
     (reduce-kv (f assoc) (empty coll) coll)))
 
+(defn map-entry [k v]
+  #+clj  (clojure.lang.MapEntry. k v)
+  #+cljs [k v])
+
 (defn map-keys
   "Maps a function over the keys of an associative collection."
   [f coll]
