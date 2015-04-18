@@ -1,6 +1,6 @@
 (ns medley.core
-  "A small collection of useful pure functions that might not look out of place
-  in the clojure.core namespace."
+  "A small collection of useful, mostly pure functions that might not look out
+  of place in the clojure.core namespace."
   (:refer-clojure :exclude [update]))
 
 (defn find-first
