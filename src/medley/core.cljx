@@ -49,7 +49,9 @@
     (persistent! (reduce-kv (f assoc!) (transient (empty coll)) coll))
     (reduce-kv (f assoc) (empty coll) coll)))
 
-(defn map-entry [k v]
+(defn map-entry
+  "Create a map entry for a key and value pair."
+  [k v]
   #+clj  (clojure.lang.MapEntry. k v)
   #+cljs [k v])
 
