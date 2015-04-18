@@ -131,14 +131,14 @@
   ([] nil)
   ([a] a)
   ([a b] (if (neg? (compare a b)) a b))
-  ([a b & more] (reduce least a (cons b more))))
+  ([a b & more] (reduce least (least a b) more)))
 
 (defn greatest
   "Find the greatest argument (as defined by the compare function) in O(n) time."
   ([] nil)
   ([a] a)
   ([a b] (if (pos? (compare a b)) a b))
-  ([a b & more] (reduce greatest a (cons b more))))
+  ([a b & more] (reduce greatest (greatest a b) more)))
 
 (defn mapply
   "Applies a function f to the argument list formed by concatenating
