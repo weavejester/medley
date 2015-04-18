@@ -38,6 +38,14 @@
   (is (= (type (m/map-entry :a 1))
          (type (first {:a 1})))))
 
+(deftest test-map-kv
+  (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) {:a 1 :b 2})
+         {"a" 2 "b" 3}))
+  (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) (sorted-map :a 1 :b 2))
+         {"a" 2 "b" 3}))
+  (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) {:a 1 :b 2})
+         {"a" 2 "b" 3})))
+
 (deftest test-map-keys
   (is (= (m/map-keys name {:a 1 :b 2})
          {"a" 1 "b" 2}))
