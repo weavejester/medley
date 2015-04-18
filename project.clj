@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]]
   :plugins [[codox "0.8.10"]
-            [lein-cljsbuild "1.0.4"]
+            [lein-cljsbuild "1.0.5"]
             [com.cemerick/clojurescript.test "0.3.3"]]
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
@@ -34,9 +34,9 @@
                      ["with-profile" "default:+1.6:+1.7" "test"]
                      ["with-profile" "+1.6" "cljsbuild" "test"]]}
   :profiles
-  {:provided {:dependencies [[org.clojure/clojurescript "0.0-2234"]]}
+  {:provided {:dependencies [[org.clojure/clojurescript "0.0-3178"]]}
    :dev {:dependencies [[criterium "0.4.3"]]
          :jvm-opts ^:replace {}
-         :plugins [[com.keminglabs/cljx "0.5.0"]]}
+         :plugins [[com.keminglabs/cljx "0.6.0"]]}
    :1.6 {:dependencies [[org.clojure/clojure "1.6.0"]]}
-   :1.7 {:dependencies [[org.clojure/clojure "1.7.0-alpha4"]]}})
+   :1.7 {:dependencies [[org.clojure/clojure "1.7.0-beta1"]]}})
