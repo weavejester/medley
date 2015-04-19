@@ -128,6 +128,7 @@
 
 (defn least
   "Return the least argument (as defined by the compare function) in O(n) time."
+  {:arglists '([& xs])}
   ([] nil)
   ([a] a)
   ([a b] (if (neg? (compare a b)) a b))
@@ -135,6 +136,7 @@
 
 (defn greatest
   "Find the greatest argument (as defined by the compare function) in O(n) time."
+  {:arglists '([& xs])}
   ([] nil)
   ([a] a)
   ([a b] (if (pos? (compare a b)) a b))
