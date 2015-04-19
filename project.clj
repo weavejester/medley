@@ -1,4 +1,4 @@
-(defproject medley "0.5.5"
+(defproject medley "0.6.0"
   :description "A lightweight library of useful pure functions"
   :url "https://github.com/weavejester/medley"
   :license {:name "Eclipse Public License"
@@ -9,7 +9,7 @@
             [com.cemerick/clojurescript.test "0.3.3"]]
   :codox {:defaults {:doc/format :markdown}
           :sources ["target/generated/src"]
-          :src-dir-uri "http://github.com/weavejester/medley/blob/0.5.5/"
+          :src-dir-uri "http://github.com/weavejester/medley/blob/0.6.0/"
           :src-linenum-anchor-prefix "L"
           :src-uri-mapping {#"target/generated/src" #(str "src/" % "x")}}
   :cljx

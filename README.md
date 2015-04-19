@@ -16,7 +16,13 @@ general-purpose functions.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.5.5"]
+    [medley "0.6.0"]
+
+## Breaking Changes
+
+In 0.6.0 the type signature of `greatest` and `least` was changed to be more
+like `max` and `min` in Clojure core. If you're upgrading from a version prior
+to 0.6.0, please update your usage of `greatest` and `least`.
 
 ## Documentation
 
