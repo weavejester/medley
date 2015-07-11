@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]]
-  :plugins [[codox "0.8.11"]
+  :plugins [[codox "0.8.13"]
             [lein-cljsbuild "1.0.6"]
             [com.cemerick/clojurescript.test "0.3.3"]]
   :codox {:defaults {:doc/format :markdown}
