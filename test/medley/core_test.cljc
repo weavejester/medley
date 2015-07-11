@@ -1,19 +1,12 @@
 (ns medley.core-test
-  #+clj (:import [clojure.lang ArityException])
-  (:require #+clj  [clojure.test :refer :all]
-            #+cljs [cemerick.cljs.test :as t :refer-macros [is deftest testing]]
-                   [medley.core :as m]))
+  #?(:clj (:import [clojure.lang ArityException]))
+  (:require #?(:clj  [clojure.test :refer :all]
+               :cljs [cemerick.cljs.test :as t :refer-macros [is deftest testing]])
+            [medley.core :as m]))
 
 (deftest test-find-first
   (is (= (m/find-first even? [7 3 3 2 8]) 2))
   (is (nil? (m/find-first even? [7 3 3 7 3]))))
-
-(deftest test-update
-  (is (= (m/update {:a 5} :a inc) {:a 6}))
-  (is (= (m/update {:a 5} :a + 1) {:a 6}))
-  (is (= (m/update {:a 5} :a + 1 2) {:a 8}))
-  (is (= (m/update {:a 5} :a + 1 2 3) {:a 11}))
-  (is (= (m/update {:a 5} :a + 1 2 3 4) {:a 15})))
 
 (deftest test-dissoc-in
   (is (= (m/dissoc-in {:a {:b {:c 1 :d 2}}} [:a :b :c])
@@ -96,17 +89,17 @@
 
 (deftest test-queue
   (testing "empty"
-    #+clj  (is (instance? clojure.lang.PersistentQueue (m/queue)))
-    #+cljs (is (instance? cljs.core.PersistentQueue (m/queue)))
+    #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue)))
+       :cljs (is (instance? cljs.core.PersistentQueue (m/queue))))
     (is (empty? (m/queue))))
   (testing "not empty"
-    #+clj  (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3])))
-    #+cljs (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3])))
+    #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3])))
+       :cljs (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3]))))
     (is (= (first (m/queue [1 2 3])) 1))))
 
 (deftest test-queue?
-  #+clj  (is (m/queue? clojure.lang.PersistentQueue/EMPTY))
-  #+cljs (is (m/queue? cljs.core.PersistentQueue.EMPTY))
+  #?(:clj  (is (m/queue? clojure.lang.PersistentQueue/EMPTY))
+     :cljs (is (m/queue? cljs.core.PersistentQueue.EMPTY)))
   (is (not (m/queue? []))))
 
 (deftest test-boolean?
@@ -138,9 +131,9 @@
     (is (= (m/mapply foo 0 {:baz 1}) [0 1]))
     (is (= (m/mapply foo 0 {:spam 1}) [0 nil]))
     (is (= (m/mapply foo 0 nil) [0 nil]))
-    #+clj  (is (thrown? ArityException (m/mapply foo {})))
-    #+clj  (is (thrown? IllegalArgumentException (m/mapply foo 0)))
-    #+cljs (is (thrown? js/Error (m/mapply foo 0)))))
+    #?@(:clj  [(is (thrown? ArityException (m/mapply foo {})))
+               (is (thrown? IllegalArgumentException (m/mapply foo 0)))]
+        :cljs [(is (thrown? js/Error (m/mapply foo 0)))])))
 
 (deftest test-interleave-all
   (is (= (m/interleave-all []) []))
@@ -180,10 +173,10 @@
   (is (= (m/abs 2) 2))
   (is (= (m/abs -2.1) 2.1))
   (is (= (m/abs 1.8) 1.8))
-  #+clj (is (= (m/abs -1/3) 1/3))
-  #+clj (is (= (m/abs 1/2) 1/2))
-  #+clj (is (= (m/abs 3N) 3N))
-  #+clj (is (= (m/abs -4N) 4N)))
+  #?@(:clj [(is (= (m/abs -1/3) 1/3))
+            (is (= (m/abs 1/2) 1/2))
+            (is (= (m/abs 3N) 3N))
+            (is (= (m/abs -4N) 4N))]))
 
 (deftest test-deref-swap!
   (let [a (atom 0)]

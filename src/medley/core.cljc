@@ -1,21 +1,11 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
-  of place in the clojure.core namespace."
-  (:refer-clojure :exclude [update]))
+  of place in the clojure.core namespace.")
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
   [pred coll]
   (first (filter pred coll)))
-
-(defn update
-  "Updates a value in a map with a function."
-  {:arglists '([m k f & args])}
-  ([m k f] (assoc m k (f (get m k))))
-  ([m k f a1] (assoc m k (f (get m k) a1)))
-  ([m k f a1 a2] (assoc m k (f (get m k) a1 a2)))
-  ([m k f a1 a2 a3] (assoc m k (f (get m k) a1 a2 a3)))
-  ([m k f a1 a2 a3 & args] (assoc m k (apply f (get m k) a1 a2 a3 args))))
 
 (defn dissoc-in
   "Dissociate a value in a nested assocative structure, identified by a sequence
@@ -41,8 +31,8 @@
            (partition 2 kvs))))
 
 (defn- editable? [coll]
-  #+clj  (instance? clojure.lang.IEditableCollection coll)
-  #+cljs (satisfies? cljs.core.IEditableCollection coll))
+  #?(:clj  (instance? clojure.lang.IEditableCollection coll)
+     :cljs (satisfies? cljs.core.IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
   (if (editable? coll)
@@ -52,8 +42,8 @@
 (defn map-entry
   "Create a map entry for a key and value pair."
   [k v]
-  #+clj  (clojure.lang.MapEntry. k v)
-  #+cljs [k v])
+  #?(:clj  (clojure.lang.MapEntry. k v)
+     :cljs [k v]))
 
 (defn map-kv
   "Maps a function over the key/value pairs of an associate collection. Expects
@@ -110,21 +100,21 @@
 
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
-  ([] #+clj clojure.lang.PersistentQueue/EMPTY
-      #+cljs cljs.core.PersistentQueue.EMPTY)
+  ([] #?(:clj  clojure.lang.PersistentQueue/EMPTY
+         :cljs cljs.core.PersistentQueue.EMPTY))
   ([coll] (into (queue) coll)))
 
 (defn queue?
   "Returns true if x implements clojure.lang.PersistentQueue."
   [x]
-  (instance? #+clj clojure.lang.PersistentQueue
-             #+cljs cljs.core.PersistentQueue x))
+  (instance? #?(:clj  clojure.lang.PersistentQueue
+                :cljs cljs.core.PersistentQueue) x))
 
 (defn boolean?
   "Returns true if x is a boolean."
   [x]
-  #+clj  (instance? Boolean x)
-  #+cljs (or (true? x) (false? x)))
+  #?(:clj  (instance? Boolean x)
+     :cljs (or (true? x) (false? x))))
 
 (defn least
   "Return the least argument (as defined by the compare function) in O(n) time."
