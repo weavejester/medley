@@ -16,13 +16,19 @@ general-purpose functions.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.6.0"]
+    [medley "0.7.0"]
 
 ## Breaking Changes
+
+In 0.7.0 the minimum Clojure version was changed from 1.5.1 to 1.7.0
+to take advantage of [reader conditionals][3]. The `update` function
+has also been removed, as it is now present in `clojure.core`.
 
 In 0.6.0 the type signature of `greatest` and `least` was changed to be more
 like `max` and `min` in Clojure core. If you're upgrading from a version prior
 to 0.6.0, please update your usage of `greatest` and `least`.
+
+[3]: http://dev.clojure.org/display/design/Reader+Conditionals
 
 ## Documentation
 
