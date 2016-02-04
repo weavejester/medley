@@ -4,12 +4,13 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]]
-  :plugins [[codox "0.8.13"]
+  :plugins [[lein-codox "0.9.3"]
             [lein-cljsbuild "1.0.6"]
             [com.cemerick/clojurescript.test "0.3.3"]]
-  :codox {:defaults {:doc/format :markdown}
-          :src-dir-uri "http://github.com/weavejester/medley/blob/0.7.0/"
-          :src-linenum-anchor-prefix "L"}
+  :codox
+  {:output-path "codox"
+   :metadata {:doc/format :markdown}
+   :source-uri "http://github.com/weavejester/medley/blob/{version}/{filepath}#L{line}"}
   :cljsbuild
   {:builds
    [{:source-paths ["src" "test"]
