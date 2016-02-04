@@ -1,7 +1,7 @@
 (ns medley.core-test
   #?(:clj (:import [clojure.lang ArityException]))
   (:require #?(:clj  [clojure.test :refer :all]
-               :cljs [cemerick.cljs.test :as t :refer-macros [is deftest testing]])
+               :cljs [cljs.test :refer-macros [deftest is testing]])
             [medley.core :as m]))
 
 (deftest test-find-first

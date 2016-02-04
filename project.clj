@@ -6,22 +6,25 @@
   :dependencies [[org.clojure/clojure "1.7.0"]]
   :plugins [[lein-codox "0.9.3"]
             [lein-cljsbuild "1.0.6"]
-            [com.cemerick/clojurescript.test "0.3.3"]]
+            [lein-doo "0.1.6"]]
   :codox
   {:output-path "codox"
    :metadata {:doc/format :markdown}
    :source-uri "http://github.com/weavejester/medley/blob/{version}/{filepath}#L{line}"}
   :cljsbuild
   {:builds
-   [{:source-paths ["src" "test"]
+   {:test
+    {:source-paths ["src" "test"]
      :compiler {:output-to "target/main.js"
-                :optimizations :whitespace}}]
-   :test-commands {"unit-tests" ["phantomjs" :runner "target/main.js"]}}
+                :output-dir "target"
+                :main medley.test-runner
+                :optimizations :simple}}}}
+  :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}
   :aliases
-  {"test"      ["test" "medley.core-test"]
-   "test-cljs" ["cljsbuild" "test"]
-   "test-all"  ["do" ["test"] ["cljsbuild" "test"]]}
+  {"test-cljs" ["doo" "rhino" "test" "once"]
+   "test-all"  ["do" ["test"] ["test-cljs"]]}
   :profiles
-  {:provided {:dependencies [[org.clojure/clojurescript "0.0-3308"]]}
+  {:provided {:dependencies [[org.clojure/clojurescript "1.7.228"]]}
+   :test {:dependencies [[org.mozilla/rhino "1.7.7"]]}
    :dev {:dependencies [[criterium "0.4.3"]]
          :jvm-opts ^:replace {}}})
