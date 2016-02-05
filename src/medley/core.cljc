@@ -5,7 +5,7 @@
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
   [pred coll]
-  (first (filter pred coll)))
+  (reduce (fn [_ x] (if (pred x) (reduced x))) nil coll))
 
 (defn dissoc-in
   "Dissociate a value in a nested assocative structure, identified by a sequence
