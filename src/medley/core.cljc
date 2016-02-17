@@ -1,7 +1,7 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
   of place in the clojure.core namespace."
-  (:refer-clojure :exclude [ex-message]))
+  (:refer-clojure :exclude [ex-cause ex-message]))
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
@@ -223,9 +223,17 @@
   (deref-swap! atom (constantly newval)))
 
 (defn ex-message
-  "Returns the message attached to the given Error/Exception object.
-  For all other types returns nil. Same as `cljs.core/ex-message`
-  except it works for Clojure as well as ClojureScript."
+  "Returns the message attached to the given Error/Throwable object. For all
+  other types returns nil. Same as `cljs.core/ex-message` except it works for
+  Clojure as well as ClojureScript."
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getMessage ^Throwable ex))
      :cljs (cljs.core/ex-message ex)))
+
+(defn ex-cause
+  "Returns the cause attached to the given ExceptionInfo/Throwable object. For
+  all other types returns nil. Same as `cljs.core/ex-clause` except it works for
+  Clojure as well as ClojureScript."
+  [ex]
+  #?(:clj  (when (instance? Throwable ex) (.getCause ^Throwable ex))
+     :cljs (cljs.core/ex-cause ex)))

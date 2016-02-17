@@ -195,3 +195,8 @@
 (deftest test-ex-message
   (is (= (m/ex-message (ex-info "foo" {})) "foo"))
   (is (= (m/ex-message (new #?(:clj Exception :cljs js/Error) "bar")) "bar")))
+
+(deftest test-ex-cause
+  (let [cause (new #?(:clj Exception :cljs js/Error) "foo")]
+    (is (= (m/ex-cause (ex-info "foo" {} cause)) cause))
+    #?(:clj (is (= (m/ex-cause (Exception. "foo" cause)) cause)))))
