@@ -191,3 +191,7 @@
     (is (= @a 3))
     (is (= (m/deref-reset! a 1) 3))
     (is (= @a 1))))
+
+(deftest test-ex-message
+  (is (= (m/ex-message (ex-info "foo" {})) "foo"))
+  (is (= (m/ex-message (new #?(:clj Exception :cljs js/Error) "bar")) "bar")))

@@ -1,6 +1,7 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
-  of place in the clojure.core namespace.")
+  of place in the clojure.core namespace."
+  (:refer-clojure :exclude [ex-message]))
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
@@ -220,3 +221,11 @@
   the original value of the atom. See also: [[deref-swap!]]."
   [atom newval]
   (deref-swap! atom (constantly newval)))
+
+(defn ex-message
+  "Returns the message attached to the given Error/Exception object.
+  For all other types returns nil. Same as `cljs.core/ex-message`
+  except it works for Clojure as well as ClojureScript."
+  [ex]
+  #?(:clj  (when (instance? Throwable ex) (.getMessage ^Throwable ex))
+     :cljs (cljs.core/ex-message ex)))
