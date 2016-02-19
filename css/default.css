@@ -387,6 +387,16 @@ h4.deprecated {
     padding-left: 0;
 }
 
+.type-sig {
+    clear: both;
+    color: #088;
+}
+
+.type-sig pre {
+    padding-top: 10px;
+    margin: 0;
+}
+
 .usage code {
     display: block;
     color: #008;
