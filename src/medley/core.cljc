@@ -208,11 +208,14 @@
   This function therefore acts like an atomic `deref` then `swap!`."
   {:arglists '([atom f & args])}
   ([atom f]
-   (loop []
-     (let [value @atom]
-       (if (compare-and-set! atom value (f value))
-         value
-         (recur)))))
+   #?(:clj  (loop []
+              (let [value @atom]
+                (if (compare-and-set! atom value (f value))
+                  value
+                  (recur))))
+      :cljs (let [value @atom]
+              (reset! atom (f value))
+              value)))
   ([atom f & args]
    (deref-swap! atom #(apply f % args))))
 
