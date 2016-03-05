@@ -200,7 +200,7 @@
 (defn abs
   "Returns the absolute value of a number."
   [x]
-  (if (neg? x) (* x -1) x))
+  (if (neg? x) (- x) x))
 
 (defn deref-swap!
   "Atomically swaps the value of the atom to be `(apply f x args)`, where x is
