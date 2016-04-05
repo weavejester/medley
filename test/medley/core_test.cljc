@@ -200,3 +200,22 @@
   (let [cause (new #?(:clj Exception :cljs js/Error) "foo")]
     (is (= (m/ex-cause (ex-info "foo" {} cause)) cause))
     #?(:clj (is (= (m/ex-cause (Exception. "foo" cause)) cause)))))
+
+(deftest test-uuid?
+  (let [x #uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6"]
+    (is (m/uuid? x))
+    (is (not (m/uuid? 2)))
+    (is (not (m/uuid? (str x))))
+    (is (not (m/uuid? nil)))))
+
+(deftest test-uuid
+  (let [x (m/uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6")]
+    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
+    (is (= x #uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6"))))
+
+(deftest test-random-uuid
+  (let [x (m/random-uuid)
+        y (m/random-uuid)]
+    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
+    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
+    (is (not= x y))))

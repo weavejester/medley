@@ -1,7 +1,7 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
   of place in the clojure.core namespace."
-  (:refer-clojure :exclude [ex-cause ex-message]))
+  (:refer-clojure :exclude [ex-cause ex-message uuid random-uuid]))
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
@@ -240,3 +240,22 @@
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getCause ^Throwable ex))
      :cljs (cljs.core/ex-cause ex)))
+
+(defn uuid?
+  "Returns true if the value is a UUID."
+  [x]
+  (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
+
+(defn uuid
+  "Returns a UUID generated from the supplied string. Same as `cljs.core/uuid`
+  in ClojureScript, while in Clojure it returns a `java.util.UUID` object."
+  [s]
+  #?(:clj  (java.util.UUID/fromString s)
+     :cljs (cljs.core/uuid s)))
+
+(defn random-uuid
+  "Generates a new random UUID. Same as `cljs.core/random-uuid` except it works
+  for Clojure as well as ClojureScript."
+  []
+  #?(:clj  (java.util.UUID/randomUUID)
+     :cljs (cljs.core/random-uuid)))
