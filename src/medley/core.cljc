@@ -164,17 +164,29 @@
 (defn distinct-by
   "Returns a lazy sequence of the elements of coll, removing any elements that
   return duplicate values when passed to a function f."
-  [f coll]
-  (let [step (fn step [xs seen]
-               (lazy-seq
-                ((fn [[x :as xs] seen]
-                   (when-let [s (seq xs)]
-                     (let [fx (f x)]
-                       (if (contains? seen fx) 
-                         (recur (rest s) seen)
-                         (cons x (step (rest s) (conj seen fx)))))))
-                 xs seen)))]
-    (step coll #{})))
+  ([f]
+   (fn [rf]
+     (let [seen (volatile! #{})]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (let [fx (f x)]
+            (if (contains? @seen fx)
+              result
+              (do (vswap! seen conj fx)
+                  (rf result x)))))))))
+  ([f coll]
+   (let [step (fn step [xs seen]
+                (lazy-seq
+                 ((fn [[x :as xs] seen]
+                    (when-let [s (seq xs)]
+                      (let [fx (f x)]
+                        (if (contains? seen fx)
+                          (recur (rest s) seen)
+                          (cons x (step (rest s) (conj seen fx)))))))
+                  xs seen)))]
+     (step coll #{}))))
 
 (defn take-upto
   "Returns a lazy sequence of successive items from coll up to and including

@@ -145,12 +145,21 @@
   (is (= (m/interleave-all [1] [2 3] [4 5 6]) [1 2 4 3 5 6])))
 
 (deftest test-distinct-by
-  (is (= (m/distinct-by count ["a" "ab" "c" "cd" "def"])
-         ["a" "ab" "def"]))
-  (is (= (m/distinct-by count [])
-         []))
-  (is (= (m/distinct-by first ["foo" "faa" "boom" "bar"])
-         ["foo" "boom"])))
+  (testing "sequences"
+    (is (= (m/distinct-by count ["a" "ab" "c" "cd" "def"])
+           ["a" "ab" "def"]))
+    (is (= (m/distinct-by count [])
+           []))
+    (is (= (m/distinct-by first ["foo" "faa" "boom" "bar"])
+           ["foo" "boom"])))
+
+  (testing "transucers"
+    (is (= (into [] (m/distinct-by count) ["a" "ab" "c" "cd" "def"])
+           ["a" "ab" "def"]))
+    (is (= (into [] (m/distinct-by count) [])
+           []))
+    (is (= (into [] (m/distinct-by first) ["foo" "faa" "boom" "bar"])
+           ["foo" "boom"]))))
 
 (deftest test-take-upto
   (is (= (m/take-upto zero? [1 2 3 0 4 5 6]) [1 2 3 0]))
