@@ -170,7 +170,12 @@
   (testing "tranducers"
     (is (= (into [] (m/take-upto zero?) [1 2 3 0 4 5 6]) [1 2 3 0]))
     (is (= (into [] (m/take-upto zero?) [0 1 2 3 4 5 6]) [0]))
-    (is (= (into [] (m/take-upto zero?) [1 2 3 4 5 6 7]) [1 2 3 4 5 6 7]))))
+    (is (= (into [] (m/take-upto zero?) [1 2 3 4 5 6 7]) [1 2 3 4 5 6 7]))
+    (is (= (transduce (m/take-upto zero?)
+                      (completing (fn [_ x] (reduced x)))
+                      nil
+                      [0 1 2])
+           0))))
 
 (deftest test-drop-upto
   (testing "sequences"

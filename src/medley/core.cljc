@@ -197,9 +197,10 @@
        ([] (rf))
        ([result] (rf result))
        ([result x]
-        (if-not (pred x)
-          (rf result x)
-          (reduced (rf result x)))))))
+        (let [result (rf result x)]
+          (if (pred x)
+            (ensure-reduced result)
+            result))))))
   ([pred coll]
    (lazy-seq
     (when-let [s (seq coll)]
