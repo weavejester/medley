@@ -1,4 +1,4 @@
-(defproject medley "0.7.4"
+(defproject medley "0.8.0"
   :description "A lightweight library of useful, mostly pure functions"
   :url "https://github.com/weavejester/medley"
   :license {:name "Eclipse Public License"

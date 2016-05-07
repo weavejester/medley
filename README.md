@@ -16,7 +16,7 @@ general-purpose functions.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "0.7.4"]
+    [medley "0.8.0"]
 
 ## Breaking Changes
 
