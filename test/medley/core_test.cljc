@@ -173,9 +173,15 @@
     (is (= (into [] (m/take-upto zero?) [1 2 3 4 5 6 7]) [1 2 3 4 5 6 7]))))
 
 (deftest test-drop-upto
-  (is (= (m/drop-upto zero? [1 2 3 0 4 5 6]) [4 5 6]))
-  (is (= (m/drop-upto zero? [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
-  (is (= (m/drop-upto zero? [1 2 3 4 5 6 7]) [])))
+  (testing "sequences"
+    (is (= (m/drop-upto zero? [1 2 3 0 4 5 6]) [4 5 6]))
+    (is (= (m/drop-upto zero? [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
+    (is (= (m/drop-upto zero? [1 2 3 4 5 6 7]) [])))
+
+  (testing "transducers"
+    (is (= (into [] (m/drop-upto zero?) [1 2 3 0 4 5 6]) [4 5 6]))
+    (is (= (into [] (m/drop-upto zero?) [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
+    (is (= (into [] (m/drop-upto zero?) [1 2 3 4 5 6 7]) []))))
 
 (deftest test-indexed
   (is (= (m/indexed [:a :b :c :d])

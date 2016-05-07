@@ -209,8 +209,18 @@
 (defn drop-upto
   "Returns a lazy sequence of the items in coll starting *after* the first item
   for which `(pred item)` returns true."
-  [pred coll]
-  (rest (drop-while (complement pred) coll)))
+  ([pred]
+   (fn [rf]
+     (let [dv (volatile! true)]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (if @dv
+            (do (when (pred x) (vreset! dv false)) result)
+            (rf result x)))))))
+  ([pred coll]
+   (rest (drop-while (complement pred) coll))))
 
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
