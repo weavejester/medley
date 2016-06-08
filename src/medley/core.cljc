@@ -1,7 +1,7 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
   of place in the clojure.core namespace."
-  (:refer-clojure :exclude [ex-cause ex-message uuid random-uuid]))
+  (:refer-clojure :exclude [boolean? ex-cause ex-message uuid uuid? random-uuid]))
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate."
