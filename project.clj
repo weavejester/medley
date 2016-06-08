@@ -22,9 +22,12 @@
   :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}
   :aliases
   {"test-cljs" ["doo" "rhino" "test" "once"]
-   "test-all"  ["do" ["test"] ["test-cljs"]]}
+   "test-clj"  ["with-profile" "default:+1.8:+1.9" "test"]
+   "test-all"  ["do" ["test-clj"] ["test-cljs"]]}
   :profiles
   {:provided {:dependencies [[org.clojure/clojurescript "1.7.228"]]}
    :test {:dependencies [[org.mozilla/rhino "1.7.7"]]}
    :dev {:dependencies [[criterium "0.4.3"]]
-         :jvm-opts ^:replace {}}})
+         :jvm-opts ^:replace {}}
+   :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
+   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-alpha5"]]}})
