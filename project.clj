@@ -30,4 +30,4 @@
    :dev {:dependencies [[criterium "0.4.3"]]
          :jvm-opts ^:replace {}}
    :1.8 {:dependencies [[org.clojure/clojure "1.8.0"]]}
-   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-alpha5"]]}})
+   :1.9 {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}})
