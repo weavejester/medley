@@ -5,12 +5,11 @@
 Medley is a lightweight Clojure/ClojureScript library of useful,
 *mostly* pure functions that are "missing" from clojure.core.
 
-Medley has a tighter focus than [flatland/useful][1] and
-[Prismatic/plumbing][2], and limits itself to a small set of
-general-purpose functions.
+Medley has a tighter focus than [flatland/useful][] or [Plumbing][],
+and limits itself to a small set of general-purpose functions.
 
-[1]: https://github.com/flatland/useful
-[2]: https://github.com/prismatic/plumbing
+[flatland/useful]: https://github.com/flatland/useful
+[plumbing]:        https://github.com/plumatic/plumbing
 
 ## Installation
 
@@ -21,14 +20,15 @@ To install, add the following to your project `:dependencies`:
 ## Breaking Changes
 
 In 0.7.0 the minimum Clojure version was changed from 1.5.1 to 1.7.0
-to take advantage of [reader conditionals][3]. The `update` function
+to take advantage of [reader conditionals][]. The `update` function
 has also been removed, as it is now present in `clojure.core`.
 
-In 0.6.0 the type signature of `greatest` and `least` was changed to be more
-like `max` and `min` in Clojure core. If you're upgrading from a version prior
-to 0.6.0, please update your usage of `greatest` and `least`.
+In 0.6.0 the type signature of `greatest` and `least` was changed to
+be more like `max` and `min` in Clojure core. If you're upgrading from
+a version prior to 0.6.0, please update your usage of `greatest` and
+`least`.
 
-[3]: http://dev.clojure.org/display/design/Reader+Conditionals
+[reader conditionals]: http://dev.clojure.org/display/design/Reader+Conditionals
 
 ## Documentation
 
