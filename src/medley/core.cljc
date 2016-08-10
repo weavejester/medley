@@ -188,6 +188,25 @@
                   xs seen)))]
      (step coll #{}))))
 
+(defn dedupe-by
+  "Returns a lazy sequence of the elements of coll, removing any **consecutive**
+  elements that return duplicate values when passed to a function f."
+  ([f]
+   (fn [rf]
+     (let [pv (volatile! ::none)]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (let [prior @pv
+                fx    (f x)]
+            (vreset! pv fx)
+            (if (= prior fx)
+              result
+              (rf result x))))))))
+  ([f coll]
+   (sequence (dedupe-by f) coll)))
+
 (defn take-upto
   "Returns a lazy sequence of successive items from coll up to and including
   the first item for which `(pred item)` returns true."

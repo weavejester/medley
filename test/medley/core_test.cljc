@@ -161,6 +161,23 @@
     (is (= (into [] (m/distinct-by first) ["foo" "faa" "boom" "bar"])
            ["foo" "boom"]))))
 
+(deftest test-dedupe-by
+  (testing "sequences"
+    (is (= (m/dedupe-by count ["a" "b" "bc" "bcd" "cd"])
+           ["a" "bc" "bcd" "cd"]))
+    (is (= (m/dedupe-by count [])
+           []))
+    (is (= (m/dedupe-by first ["foo" "faa" "boom" "bar"])
+           ["foo" "boom"])))
+
+  (testing "transucers"
+    (is (= (into [] (m/dedupe-by count) ["a" "b" "bc" "bcd" "cd"])
+           ["a" "bc" "bcd" "cd"]))
+    (is (= (into [] (m/dedupe-by count) [])
+           []))
+    (is (= (into [] (m/dedupe-by first) ["foo" "faa" "boom" "bar"])
+           ["foo" "boom"]))))
+
 (deftest test-take-upto
   (testing "sequences"
     (is (= (m/take-upto zero? [1 2 3 0 4 5 6]) [1 2 3 0]))
