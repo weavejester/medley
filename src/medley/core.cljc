@@ -245,8 +245,16 @@
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
   value in coll, and index its position starting from zero."
-  [coll]
-  (map-indexed vector coll))
+  ([]
+   (fn [rf]
+     (let [i (volatile! -1)]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (rf result [(vswap! i inc) x]))))))
+  ([coll]
+   (map-indexed vector coll)))
 
 (defn abs
   "Returns the absolute value of a number."

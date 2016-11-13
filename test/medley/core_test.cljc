@@ -206,10 +206,17 @@
     (is (= (into [] (m/drop-upto zero?) [1 2 3 4 5 6 7]) []))))
 
 (deftest test-indexed
-  (is (= (m/indexed [:a :b :c :d])
-         [[0 :a] [1 :b] [2 :c] [3 :d]]))
-  (is (= (m/indexed [])
-         [])))
+  (testing "sequences"
+    (is (= (m/indexed [:a :b :c :d])
+           [[0 :a] [1 :b] [2 :c] [3 :d]]))
+    (is (= (m/indexed [])
+           [])))
+
+  (testing "transducers"
+    (is (= (into [] (m/indexed) [:a :b :c :d])
+           [[0 :a] [1 :b] [2 :c] [3 :d]]))
+    (is (= (into [] (m/indexed) [])
+           []))))
 
 (deftest test-abs
   (is (= (m/abs -3) 3))
