@@ -5,8 +5,12 @@
             [medley.core :as m]))
 
 (deftest test-find-first
-  (is (= (m/find-first even? [7 3 3 2 8]) 2))
-  (is (nil? (m/find-first even? [7 3 3 7 3]))))
+  (testing "sequences"
+    (is (= (m/find-first even? [7 3 3 2 8]) 2))
+    (is (nil? (m/find-first even? [7 3 3 7 3]))))
+  (testing "transducers"
+    (is (= (transduce (m/find-first even?) + 0 [7 3 3 2 8]) 2))
+    (is (= (transduce (m/find-first even?) + 0 [7 3 3 7 3]) 0))))
 
 (deftest test-dissoc-in
   (is (= (m/dissoc-in {:a {:b {:c 1 :d 2}}} [:a :b :c])
