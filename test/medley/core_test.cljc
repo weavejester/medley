@@ -116,7 +116,7 @@
 (deftest test-natural?
   (is (not (m/natural? -1.5)))
   (is (not (m/natural? -1)))
-  (is (not (m/natural? 1.0)))
+  (is (not (m/natural? 1.5)))
   (is (m/natural? 0))
   (is (m/natural? 1))
   (is (m/natural? 2)))
