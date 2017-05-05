@@ -167,7 +167,7 @@
   ([c1 c2 & colls]
    (lazy-seq
     (let [ss (remove nil? (map seq (conj colls c2 c1)))]
-      (if (seq ss)
+      (when (seq ss)
         (concat (map first ss) (apply interleave-all (map rest ss))))))))
 
 (defn distinct-by
