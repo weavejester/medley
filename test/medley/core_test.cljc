@@ -113,6 +113,14 @@
   (is (not (m/boolean? "foo")))
   (is (not (m/boolean? 1))))
 
+(deftest test-natural?
+  (is (not (m/natural? -1.5)))
+  (is (not (m/natural? -1)))
+  (is (not (m/natural? 1.5)))
+  (is (m/natural? 0))
+  (is (m/natural? 1))
+  (is (m/natural? 2)))
+
 (deftest test-least
   (is (= (m/least) nil))
   (is (= (m/least "a") "a"))

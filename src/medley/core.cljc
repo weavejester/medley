@@ -126,6 +126,11 @@
   #?(:clj  (instance? Boolean x)
      :cljs (or (true? x) (false? x))))
 
+(defn natural?
+  "Returns true if x is a natural number."
+  [x]
+  (and (integer? x) (or (zero? x) (pos? x))))
+
 (defn least
   "Return the least argument (as defined by the compare function) in O(n) time."
   {:arglists '([& xs])}
