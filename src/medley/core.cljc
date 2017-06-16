@@ -327,3 +327,47 @@
   []
   #?(:clj  (java.util.UUID/randomUUID)
      :cljs (cljs.core/random-uuid)))
+
+(defmacro selfmapk
+  "Self-maps a collection to a hash map of keywords identical
+   to the input variables or collection of variables"
+  ([coll-or-var]
+   (let [body (if (coll? coll-or-var) coll-or-var [coll-or-var])]
+     (let [ks [(map keyword body)]]
+       `(let [vs# ~body]
+          (zipmap '~@ks vs#)))))
+  ([v1 v2 & body]
+   `(selfmapk [~v1 ~v2 ~@body])))
+
+(defmacro selfmapq
+  "Self-maps a collection to a hash map of fully-qualified keywords
+   identical to the input variables or collection
+   of variables"
+  ([coll-or-var]
+   (let [body (if (coll? coll-or-var) coll-or-var [coll-or-var])]
+     (let [ks [(map #(keyword (str *ns*) (str %)) body)]]
+       `(let [vs# ~body]
+          (zipmap '~@ks vs#)))))
+  ([v1 v2 & body]
+   `(selfmapq [~v1 ~v2 ~@body])))
+
+(defmacro selfmaps
+  "Self-maps a collection to a hash map of strings identical
+   to the input variables or collection of variables"
+  ([coll-or-var]
+   (let [body (if (coll? coll-or-var) coll-or-var [coll-or-var])]
+     (let [ks [(map name body)]]
+       `(let [vs# ~body]
+          (zipmap '~@ks vs#)))))
+  ([v1 v2 & body]
+   `(selfmaps [~v1 ~v2 ~@body])))
+
+(defmacro selfmapb
+  "Self-maps a collection to a hash map of symbols identical
+   to that of the input variables or collection of variables"
+  ([coll-or-var]
+   (let [body (if (coll? coll-or-var) coll-or-var [coll-or-var])]
+     `(let [vs# [~@body]]
+        (zipmap '~body vs#))))
+  ([v1 v2 & body]
+   `(selfmapb [~v1 ~v2 ~@body])))
