@@ -273,3 +273,38 @@
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
     (is (not= x y))))
+
+(deftest test-selfmap-all-variants
+  (let [a 1 b 2 c 3]
+
+    (testing "selfmapk"
+      (is (= (m/selfmapk a) {:a a}))
+      (is (= (m/selfmapk a b) {:a a :b b}))
+      (is (= (m/selfmapk a b c) {:a a :b b :c c}))
+      (is (= (m/selfmapk [a]) {:a a}))
+      (is (= (m/selfmapk [a b]) {:a a :b b}))
+      (is (= (m/selfmapk [a b c]) {:a a :b b :c c})))
+
+    (testing "selfmapq"
+      (is (= (m/selfmapq a) {:medley.core-test/a a}))
+      (is (= (m/selfmapq a b) {:medley.core-test/a a :medley.core-test/b b}))
+      (is (= (m/selfmapq a b c) {:medley.core-test/a a :medley.core-test/b b :medley.core-test/c c}))
+      (is (= (m/selfmapq [a]) {:medley.core-test/a a}))
+      (is (= (m/selfmapq [a b]) {:medley.core-test/a a :medley.core-test/b b}))
+      (is (= (m/selfmapq [a b c]) {:medley.core-test/a a :medley.core-test/b b :medley.core-test/c c})))
+
+    (testing "selfmaps"
+      (is (= (m/selfmaps a) {"a" a}))
+      (is (= (m/selfmaps a b) {"a" a "b" b}))
+      (is (= (m/selfmaps a b c) {"a" a "b" b "c" c}))
+      (is (= (m/selfmaps [a]) {"a" a}))
+      (is (= (m/selfmaps [a b]) {"a" a "b" b}))
+      (is (= (m/selfmaps [a b c]) {"a" a "b" b "c" c})))
+
+    (testing "selfmapb"
+      (is (= (m/selfmapb a) {'a a}))
+      (is (= (m/selfmapb a b) {'a a 'b b}))
+      (is (= (m/selfmapb a b c) {'a a 'b b 'c c}))
+      (is (= (m/selfmapb [a]) {'a a}))
+      (is (= (m/selfmapb [a b]) {'a a 'b b}))
+      (is (= (m/selfmapb [a b c]) {'a a 'b b 'c c})))))
