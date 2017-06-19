@@ -327,3 +327,56 @@
   []
   #?(:clj  (java.util.UUID/randomUUID)
      :cljs (cljs.core/random-uuid)))
+
+
+(defn- join-maps [a* b*]
+  (clojure.set/rename-keys (select-keys b* (vals a*))
+                           (zipmap (vals a*) (keys a*))))
+
+(defn left-join [a b & others]
+  "Left joins two maps, so the resulting map will have the keys of the first map
+   and the values of the second map for which the keys correspond to the values
+   of the first map, always keeping the original keys with the old values if no
+   match is found in the following map. It admits a series of maps in which case
+   this operation is repeated with the resulting map and the next in the series.
+   The value of a key will be the last value in the map series with a transitive
+   relationship to the key."
+  (letfn [(join [a* b*]
+            (merge a* (join-maps a* b*)))]
+    (loop [c (first others) remainder (rest others) result (join a b)]
+      (if-not c
+        result
+        (recur (first remainder) (rest remainder) (join result c))))))
+
+(defn inner-join [a b & others]
+  "Joins two maps, so the resulting map will have the keys of the first map
+   and the values of the second map for which the keys correspond to the values
+   of the first map, only keeping the keys present in a map and the following in
+   the sense of set intersection. It admits a series of maps in which case
+   this operation is repeated with the resulting map and the next in the series.
+   The value of a key will be the last value in the map series with a transitive
+   relationship to the key."
+  (letfn [(join [a* b*]
+            (join-maps a* b*))]
+    (loop [c (first others) remainder (rest others) result (join a b)]
+      (if-not c
+        result
+        (recur (first remainder) (rest remainder) (join result c))))))
+
+(defn merge-join [a b & others]
+  "Joins two maps, so the resulting map will have the keys of the first map
+   and the values of the second map for which the keys correspond to the values
+   of the first map, and a merge with the input maps for the non-matching keys
+   of both input maps. It admits a series of maps in which case
+   this operation is repeated with the resulting map and the next in the series.
+   The value of a key will be the last value in the map series with a transitive
+   relationship to the key."
+  (letfn [(join [a* b*]
+            (merge
+              a* b*
+              (->> (map-kv #(vector %1 (b* %2)) a*)
+                   (filter-vals some?))))]
+    (loop [c (first others) remainder (rest others) result (join a b)]
+      (if-not c
+        result
+        (recur (first remainder) (rest remainder) (join result c))))))

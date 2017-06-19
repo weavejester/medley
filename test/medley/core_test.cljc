@@ -273,3 +273,24 @@
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
     (is (not= x y))))
+
+(deftest test-joins
+  (let [a {:a 1 :b 2}
+        b {1 "a" 3 "c"}
+        c {"a" 'a}
+        d {'a "z"}]
+
+    (testing "left-join"
+      (is (= (m/left-join a b) {:a "a" :b 2}))
+      (is (= (m/left-join a b c) {:a 'a :b 2}))
+      (is (= (m/left-join a b c d) {:a "z" :b 2})))
+
+    (testing "inner-join"
+      (is (= (m/inner-join a b) {:a "a"}))
+      (is (= (m/inner-join a b c) {:a 'a}))
+      (is (= (m/inner-join a b c d) {:a "z"})))
+
+    (testing "merge-join"
+      (is (= (m/merge-join a b) {:a "a" :b 2 1 "a" 3 "c"}))
+      (is (= (m/merge-join a b c) {:a 'a :b 2 1 'a 3 "c" "a" 'a}))
+      (is (= (m/merge-join a b c d) {:a "z" :b 2 1 "z" 3 "c" "a" "z" 'a "z"})))))
