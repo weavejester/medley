@@ -19,6 +19,8 @@
          {}))
   (is (= (m/dissoc-in {:a {:b {:c 1} :d 2}} [:a :b :c])
          {:a {:d 2}}))
+  (is (= (m/dissoc-in {:a {:b {:c 1} :d 2} :b {:c {:d 2 :e 3}}} [:a :b :c] [:b :c :d])
+         {:a {:d 2} :b {:c {:e 3}}}))
   (is (= (m/dissoc-in {:a 1} [])
          {:a 1})))
 
