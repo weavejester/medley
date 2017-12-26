@@ -41,19 +41,28 @@
   (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) (sorted-map :a 1 :b 2))
          {"a" 2 "b" 3}))
   (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) {:a 1 :b 2})
-         {"a" 2 "b" 3})))
+         {"a" 2 "b" 3}))
+  (testing "map-kv with record"
+    (defrecord MyRecord [x])
+    (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) (->MyRecord 1)) {"x" 2}))))
 
 (deftest test-map-keys
   (is (= (m/map-keys name {:a 1 :b 2})
          {"a" 1 "b" 2}))
   (is (= (m/map-keys name (sorted-map :a 1 :b 2))
-         (sorted-map "a" 1 "b" 2))))
+         (sorted-map "a" 1 "b" 2)))
+  (testing "map-keys with record"
+    (defrecord MyRecord [x])
+    (is (= (m/map-keys name (->MyRecord 1)) {"x" 1}))))
 
 (deftest test-map-vals
   (is (= (m/map-vals inc {:a 1 :b 2})
          {:a 2 :b 3}))
   (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
-         (sorted-map :a 2 :b 3))))
+         (sorted-map :a 2 :b 3)))
+  (testing "map-vals with record"
+    (defrecord MyRecord [x])
+    (is (= (m/map-vals inc (->MyRecord 1)) {:x 2}))))
 
 (deftest test-filter-kv
   (is (= (m/filter-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})

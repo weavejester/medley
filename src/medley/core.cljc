@@ -45,9 +45,10 @@
      :cljs (satisfies? cljs.core.IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
-  (if (editable? coll)
-    (persistent! (reduce-kv (f assoc!) (transient (empty coll)) coll))
-    (reduce-kv (f assoc) (empty coll) coll)))
+  (let [coll' (if (record? coll) (into {} coll) coll)]
+    (if (editable? coll')
+      (persistent! (reduce-kv (f assoc!) (transient (empty coll')) coll'))
+      (reduce-kv (f assoc) (empty coll') coll'))))
 
 (defn map-entry
   "Create a map entry for a key and value pair."
