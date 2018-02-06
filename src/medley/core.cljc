@@ -44,6 +44,16 @@
            (assoc-some m k v)
            (partition 2 kvs))))
 
+(defn update-some
+  "Updates the value under a key with fn in an associative structure, if and
+  only if the value is present."
+  ([m k f]
+   (if-not (find m k) m (update m k f)))
+  ([m k f & kfs]
+   (reduce (fn [m [k f]] (update-some m k f))
+           (update-some m k f)
+           (partition 2 kfs))))
+
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
      :cljs (satisfies? cljs.core.IEditableCollection coll)))
