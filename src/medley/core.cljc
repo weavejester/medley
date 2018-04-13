@@ -269,6 +269,19 @@
   ([coll]
    (map-indexed vector coll)))
 
+(defn hash-map-by
+  "Builds a hash map from a collection of values, applying f to each value
+  to form the key.
+
+  Often the values are maps and f is a keyword."
+  {:added "1.1.0"}
+  [f coll]
+  (->> coll
+       (reduce (fn [m v]
+                 (assoc! m (f v) v))
+               (transient {}))
+       persistent!))
+
 (defn abs
   "Returns the absolute value of a number."
   [x]

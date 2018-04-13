@@ -275,3 +275,10 @@
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
     (is (not= x y))))
+
+
+(deftest test-hash-map-by
+  (is (= {} (m/hash-map-by identity nil)))
+  (is (= {:foo "foo"
+          :bar "bar"}
+         (m/hash-map-by keyword ["foo" "bar"]))))
