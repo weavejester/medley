@@ -29,6 +29,13 @@
   (is (= (m/assoc-some {:a 1} :b nil) {:a 1}))
   (is (= (m/assoc-some {:a 1} :b 2 :c nil :d 3) {:a 1 :b 2 :d 3})))
 
+(deftest test-update-existing
+  (is (= (m/update-existing {:a 1} :a inc) {:a 2}))
+  (is (= (m/update-existing {:a 1 :b 2} :a inc) {:a 2 :b 2}))
+  (is (= (m/update-existing {:b 2} :a inc) {:b 2}))
+  (is (= (m/update-existing {:a nil} :a str) {:a ""}))
+  (is (= (m/update-existing {} :a str) {})))
+
 (deftest test-map-entry
   (is (= (key (m/map-entry :a 1)) :a))
   (is (= (val (m/map-entry :a 1)) 1))

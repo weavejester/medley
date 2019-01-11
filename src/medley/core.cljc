@@ -44,6 +44,22 @@
            (assoc-some m k v)
            (partition 2 kvs))))
 
+(defn update-existing
+  "Updates a value in a map given a key and a function, if and only if the value
+  is not nil."
+  {:arglists '([m k f & args])
+   :added    "1.1.0"}
+  ([m k f]
+   (if-let [kv (find m k)] (assoc m k (f (val kv))) m))
+  ([m k f x]
+   (if-let [kv (find m k)] (assoc m k (f (val kv) x)) m))
+  ([m k f x y]
+   (if-let [kv (find m k)] (assoc m k (f (val kv) x y)) m))
+  ([m k f x y z]
+   (if-let [kv (find m k)] (assoc m k (f (val kv) x y z)) m))
+  ([m k f x y z & more]
+   (if-let [kv (find m k)] (assoc m k (apply f (val kv) x y z more)) m)))
+
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
      :cljs (satisfies? cljs.core.IEditableCollection coll)))
