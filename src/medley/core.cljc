@@ -162,6 +162,14 @@
   ([a b] (if (pos? (compare a b)) a b))
   ([a b & more] (reduce greatest (greatest a b) more)))
 
+(defn join
+  "Lazily concatenates a collection of collections into a flat sequence."
+  {:added "1.1.0"}
+  [colls]
+  (lazy-seq
+   (when-let [s (seq colls)]
+     (concat (first s) (join (rest s))))))
+
 (defn mapply
   "Applies a function f to the argument list formed by concatenating
   everything but the last element of args with the last element of

@@ -134,6 +134,16 @@
   (is (= (m/greatest "a" "b") "b"))
   (is (= (m/greatest 3 2 5 -1 0 2) 5)))
 
+(deftest test-join
+  (is (= (m/join [[1 2] []  [3] [4 5 6]]) [1 2 3 4 5 6]))
+  (is (= (m/join (sorted-map :x 1, :y 2, :z 3)) [:x 1 :y 2 :z 3]))
+  (let [a (atom 0)
+        s (m/join (iterate #(do (swap! a inc) (range (inc (count %)))) ()))]
+    (is (= (first s) 0))
+    (is (= @a 1))
+    (is (= (second s) 0))
+    (is (= @a 2))))
+
 (deftest test-mapply
   (letfn [(foo [& {:keys [bar]}] bar)]
     (is (= (m/mapply foo {}) nil))
