@@ -57,7 +57,7 @@
   "Create a map entry for a key and value pair."
   [k v]
   #?(:clj  (clojure.lang.MapEntry. k v)
-     :cljs [k v]))
+     :cljs (cljs.core.MapEntry. k v nil)))
 
 (defn map-kv
   "Maps a function over the key/value pairs of an associate collection. Expects
