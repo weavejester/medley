@@ -177,7 +177,7 @@
   overwritten, as in `clojure.core/merge`."
   {:arglists '([& maps])
    :added    "1.1.0"}
-  ([] {})
+  ([])
   ([a] a)
   ([a b]
    (if (and (map? a) (map? b))
