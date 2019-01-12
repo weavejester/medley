@@ -45,8 +45,8 @@
            (partition 2 kvs))))
 
 (defn update-existing
-  "Updates a value in a map given a key and a function, if and only if the value
-  is not nil."
+  "Updates a value in a map given a key and a function, if and only if the key
+  exists in the map. See: `clojure.core/update`."
   {:arglists '([m k f & args])
    :added    "1.1.0"}
   ([m k f]
