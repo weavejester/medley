@@ -171,6 +171,21 @@
    (when-let [s (seq colls)]
      (concat (first s) (join (rest s))))))
 
+(defn deep-merge
+  "Recursively merges maps together. If all the maps supplied have nested maps
+  under the same keys, these nested maps are merged. Otherwise the value is
+  overwritten, as in `clojure.core/merge`."
+  {:arglists '([& maps])
+   :added    "1.1.0"}
+  ([] {})
+  ([a] a)
+  ([a b]
+   (if (and (map? a) (map? b))
+     (merge-with deep-merge a b)
+     b))
+  ([a b & more]
+   (apply merge-with deep-merge a b more)))
+
 (defn mapply
   "Applies a function f to the argument list formed by concatenating
   everything but the last element of args with the last element of

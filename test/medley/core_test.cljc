@@ -44,6 +44,8 @@
   (is (= (type (m/map-entry :a 1))
          (type (first {:a 1})))))
 
+(defrecord MyRecord [x])
+
 (deftest test-map-kv
   (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) {:a 1 :b 2})
          {"a" 2 "b" 3}))
@@ -52,7 +54,6 @@
   (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) {:a 1 :b 2})
          {"a" 2 "b" 3}))
   (testing "map-kv with record"
-    (defrecord MyRecord [x])
     (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) (->MyRecord 1)) {"x" 2}))))
 
 (deftest test-map-keys
@@ -61,7 +62,6 @@
   (is (= (m/map-keys name (sorted-map :a 1 :b 2))
          (sorted-map "a" 1 "b" 2)))
   (testing "map-keys with record"
-    (defrecord MyRecord [x])
     (is (= (m/map-keys name (->MyRecord 1)) {"x" 1}))))
 
 (deftest test-map-vals
@@ -70,7 +70,6 @@
   (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
          (sorted-map :a 2 :b 3)))
   (testing "map-vals with record"
-    (defrecord MyRecord [x])
     (is (= (m/map-vals inc (->MyRecord 1)) {:x 2}))))
 
 (deftest test-filter-kv
@@ -152,6 +151,18 @@
     (is (= @a 1))
     (is (= (second s) 0))
     (is (= @a 2))))
+
+(deftest test-deep-merge
+  (is (= (m/deep-merge) {}))
+  (is (= (m/deep-merge {:a 1}) {:a 1}))
+  (is (= (m/deep-merge {:a 1} {:a 2 :b 3}) {:a 2 :b 3}))
+  (is (= (m/deep-merge {:a {:b 1 :c 2}} {:a {:b 2 :d 3}}) {:a {:b 2 :c 2 :d 3}}))
+  (is (= (m/deep-merge {:a {:b 1}} {:a 1}) {:a 1}))
+  (is (= (m/deep-merge {:a 1} {:b 2} {:b 3 :c 4}) {:a 1 :b 3 :c 4}))
+  (is (= (m/deep-merge {:a {:b {:c {:d 1}}}} {:a {:b {:c {:e 2}}}}) {:a {:b {:c {:d 1 :e 2}}}}))
+  (is (= (m/deep-merge {:a {:b [1 2]}} {:a {:b [3 4]}}) {:a {:b [3 4]}}))
+  (is (= (m/deep-merge (->MyRecord 1) {:x 2}) (->MyRecord 2)))
+  (is (= (m/deep-merge {:a (->MyRecord 1)} {:a {:x 2 :y 3}}) {:a (map->MyRecord {:x 2 :y 3})})))
 
 (deftest test-mapply
   (letfn [(foo [& {:keys [bar]}] bar)]
