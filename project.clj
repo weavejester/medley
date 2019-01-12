@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0"]]
-  :plugins [[lein-codox "0.10.3"]
+  :plugins [[lein-codox "0.10.5"]
             [lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.10"]]
   :codox
