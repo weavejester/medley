@@ -195,6 +195,16 @@
   ([f m]        (apply f (apply concat m)))
   ([f a & args] (apply f a (apply concat (butlast args) (last args)))))
 
+(defn index-by
+  "Returns a map of the elements of coll keyed by the result of f on each
+  element. The value at each key will be the last element in coll associated
+  with that key. This function is similar to `clojure.core/group-by`, except
+  that elements with the same key are overwritten, rather than added to a
+  vector of values."
+  {:added "1.2.0"}
+  [f coll]
+  (persistent! (reduce #(assoc! %1 (f %2) %2) (transient {}) coll)))
+
 (defn interleave-all
   "Returns a lazy seq of the first item in each coll, then the second, etc.
   Unlike `clojure.core/interleave`, the returned seq contains all items in the

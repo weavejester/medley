@@ -178,6 +178,12 @@
                (is (thrown? IllegalArgumentException (m/mapply foo 0)))]
         :cljs [(is (thrown? js/Error (m/mapply foo 0)))])))
 
+(deftest test-index-by
+  (is (= (m/index-by identity [1 2 3]) {1 1, 2 2, 3 3}))
+  (is (= (m/index-by inc [1 2 3]) {2 1, 3 2, 4 3}))
+  (is (= (m/index-by first ["foo" "bar" "baz"]) {\f "foo", \b "baz"}))
+  (is (= (m/index-by first []) {})))
+
 (deftest test-interleave-all
   (is (= (m/interleave-all []) []))
   (is (= (m/interleave-all [1 2 3]) [1 2 3]))
