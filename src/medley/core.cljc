@@ -70,6 +70,14 @@
       (persistent! (reduce-kv (f assoc!) (transient (empty coll')) coll'))
       (reduce-kv (f assoc) (empty coll') coll'))))
 
+(defn- completing-rf
+  [rf-fn]
+  (fn [rf]
+    (fn
+      ([] (rf))
+      ([result] (rf result))
+      ([result x] (rf-fn rf result x)))))
+
 (defn map-entry
   "Create a map entry for a key and value pair."
   [k v]
@@ -81,33 +89,21 @@
   a function that takes two arguments, the key and value, and returns the new
   key and value as a collection of two elements."
   ([f]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (rf result (f k v))))))
+   (completing-rf (fn [rf result [k v]] (rf result (f k v)))))
   ([f coll]
    (reduce-map (fn [xf] (fn [m k v] (let [[k v] (f k v)] (xf m k v)))) coll)))
 
 (defn map-keys
   "Maps a function over the keys of an associative collection."
   ([f]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (rf result [(f k) v])))))
+   (completing-rf (fn [rf result [k v]] (rf result [(f k) v]))))
   ([f coll]
    (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll)))
 
 (defn map-vals
   "Maps a function over the values of an associative collection."
   ([f]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (rf result [k (f v)])))))
+   (completing-rf (fn [rf result [k v]] (rf result [k (f v)]))))
   ([f coll]
    (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll)))
 
@@ -115,11 +111,7 @@
   "Returns a new associative collection of the items in coll for which
   `(pred (key item) (val item))` returns true."
   ([pred]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (if (pred k v) (rf result [k v]) result)))))
+   (completing-rf (fn [rf result [k v]] (if (pred k v) (rf result [k v]) result))))
   ([pred coll]
    (reduce-map (fn [xf] (fn [m k v] (if (pred k v) (xf m k v) m))) coll)))
 
@@ -127,11 +119,7 @@
   "Returns a new associative collection of the items in coll for which
   `(pred (key item))` returns true."
   ([pred]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (if (pred k) (rf result [k v]) result)))))
+   (completing-rf (fn [rf result [k v]] (if (pred k) (rf result [k v]) result))))
   ([pred coll]
    (reduce-map (fn [xf] (fn [m k v] (if (pred k) (xf m k v) m))) coll)))
 
@@ -139,11 +127,7 @@
   "Returns a new associative collection of the items in coll for which
   `(pred (val item))` returns true."
   ([pred]
-   (fn [rf]
-     (fn
-       ([] (rf))
-       ([result] (rf result))
-       ([result [k v]] (if (pred v) (rf result [k v]) result)))))
+   (completing-rf (fn [rf result [k v]] (if (pred v) (rf result [k v]) result))))
   ([pred coll]
    (reduce-map (fn [xf] (fn [m k v] (if (pred v) (xf m k v) m))) coll)))
 
