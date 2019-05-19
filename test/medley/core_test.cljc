@@ -47,66 +47,118 @@
 (defrecord MyRecord [x])
 
 (deftest test-map-kv
-  (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) {:a 1 :b 2})
-         {"a" 2 "b" 3}))
-  (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) (sorted-map :a 1 :b 2))
-         {"a" 2 "b" 3}))
-  (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) {:a 1 :b 2})
-         {"a" 2 "b" 3}))
+  (testing "maps"
+    (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) {:a 1 :b 2})
+           {"a" 2 "b" 3}))
+    (is (= (m/map-kv (fn [k v] [(name k) (inc v)]) (sorted-map :a 1 :b 2))
+           {"a" 2 "b" 3}))
+    (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) {:a 1 :b 2})
+           {"a" 2 "b" 3})))
   (testing "map-kv with record"
-    (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) (->MyRecord 1)) {"x" 2}))))
+    (is (= (m/map-kv (fn [k v] (m/map-entry (name k) (inc v))) (->MyRecord 1)) {"x" 2})))
+  (testing "transducers"
+    (is (= (into {} (m/map-kv (fn [k v] [(str k) (inc v)])) {:a 1 :b 2})
+           {":a" 2 ":b" 3}))))
 
 (deftest test-map-keys
-  (is (= (m/map-keys name {:a 1 :b 2})
-         {"a" 1 "b" 2}))
-  (is (= (m/map-keys name (sorted-map :a 1 :b 2))
-         (sorted-map "a" 1 "b" 2)))
+  (testing "maps"
+    (is (= (m/map-keys name {:a 1 :b 2})
+           {"a" 1 "b" 2}))
+    (is (= (m/map-keys name (sorted-map :a 1 :b 2))
+           (sorted-map "a" 1 "b" 2))))
   (testing "map-keys with record"
-    (is (= (m/map-keys name (->MyRecord 1)) {"x" 1}))))
+    (is (= (m/map-keys name (->MyRecord 1)) {"x" 1})))
+  (testing "transducers"
+    (is (= (into {} (m/map-keys name) {:a 1 :b 2})
+           {"a" 1 "b" 2}))
+    (is (= (into {} (m/map-keys name) (sorted-map :a 1 :b 2))
+           (sorted-map "a" 1 "b" 2)))))
 
 (deftest test-map-vals
-  (is (= (m/map-vals inc {:a 1 :b 2})
-         {:a 2 :b 3}))
-  (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
-         (sorted-map :a 2 :b 3)))
+  (testing "maps"
+    (is (= (m/map-vals inc {:a 1 :b 2})
+           {:a 2 :b 3}))
+    (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
+           (sorted-map :a 2 :b 3))))
+  (testing "transducers"
+    (is (= (into {} (m/map-vals inc) {:a 1 :b 2})
+           {:a 2 :b 3}))
+    (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
+           (sorted-map :a 2 :b 3))))
   (testing "map-vals with record"
     (is (= (m/map-vals inc (->MyRecord 1)) {:x 2}))))
 
 (deftest test-filter-kv
-  (is (= (m/filter-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
-         {:b 2}))
-  (is (= (m/filter-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
-         (sorted-map "b" 2))))
+  (testing "maps"
+    (is (= (m/filter-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
+           {:b 2}))
+    (is (= (m/filter-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
+           (sorted-map "b" 2))))
+  (testing "transducers"
+    (is (= (into {} (m/filter-kv (fn [k v] (and (keyword? k) (number? v))))
+                 {"a" 1 :b 2 :c "d"})
+           {:b 2}))
+    (is (= (into {} (m/filter-kv (fn [k v] (= v 2)))
+                 (sorted-map "a" 1 "b" 2))
+           (sorted-map "b" 2)))))
 
 (deftest test-filter-keys
-  (is (= (m/filter-keys keyword? {"a" 1 :b 2})
-         {:b 2}))
-  (is (= (m/filter-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
-         (sorted-map "b" 2))))
+  (testing "maps"
+    (is (= (m/filter-keys keyword? {"a" 1 :b 2})
+           {:b 2}))
+    (is (= (m/filter-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
+           (sorted-map "b" 2))))
+  (testing "transducers"
+    (is (= (into {} (m/filter-keys keyword?) {"a" 1 :b 2})
+           {:b 2}))
+    (is (= (into {} (m/filter-keys #(re-find #"^b" %)) (sorted-map "a" 1 "b" 2))
+           (sorted-map "b" 2)))))
 
 (deftest test-filter-vals
-  (is (= (m/filter-vals even? {:a 1 :b 2})
-         {:b 2}))
-  (is (= (m/filter-vals even? (sorted-map :a 1 :b 2))
-         (sorted-map :b 2))))
+  (testing "maps"
+    (is (= (m/filter-vals even? {:a 1 :b 2})
+           {:b 2}))
+    (is (= (m/filter-vals even? (sorted-map :a 1 :b 2))
+           (sorted-map :b 2))))
+  (testing "transducers"
+    (is (= (into {} (m/filter-vals even?) {:a 1 :b 2})
+           {:b 2}))
+    (is (= (into {} (m/filter-vals even?) (sorted-map :a 1 :b 2))
+           (sorted-map :b 2)))))
 
 (deftest test-remove-kv
-  (is (= (m/remove-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
-         {"a" 1 :c "d"}))
-  (is (= (m/remove-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
-         (sorted-map "a" 1))))
+  (testing "maps"
+    (is (= (m/remove-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
+           {"a" 1 :c "d"}))
+    (is (= (m/remove-kv (fn [k v] (= v 2)) (sorted-map "a" 1 "b" 2))
+           (sorted-map "a" 1))))
+  (testing "transducers"
+    (is (= (into {} (m/remove-kv (fn [k v] (and (keyword? k) (number? v))))
+                 {"a" 1 :b 2 :c "d"})
+           {"a" 1 :c "d"}))
+    (is (= (into {} (m/remove-kv (fn [k v] (= v 2)))
+                 (sorted-map "a" 1 "b" 2))
+           (sorted-map "a" 1)))))
 
 (deftest test-remove-keys
-  (is (= (m/remove-keys keyword? {"a" 1 :b 2})
-         {"a" 1}))
-  (is (= (m/remove-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
-         {"a" 1})))
+  (testing "maps"
+    (is (= (m/remove-keys keyword? {"a" 1 :b 2})
+           {"a" 1}))
+    (is (= (m/remove-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
+           {"a" 1})))
+  (testing "transducers"
+    (is (= (into {} (m/remove-keys keyword?) {"a" 1 :b 2})
+           {"a" 1}))))
 
 (deftest test-remove-vals
-  (is (= (m/remove-vals even? {:a 1 :b 2})
-         {:a 1}))
-  (is (= (m/remove-keys #(re-find #"^b" %) (sorted-map "a" 1 "b" 2))
-         {"a" 1})))
+  (testing "maps"
+    (is (= (m/remove-vals even? {:a 1 :b 2})
+           {:a 1}))
+    (is (= (m/remove-vals even? (sorted-map :a 1 :b 2))
+           (sorted-map :a 1))))
+  (testing "transducers"
+    (is (= (into {} (m/remove-vals even?) {:a 1 :b 2})
+           {:a 1}))))
 
 (deftest test-queue
   (testing "empty"
