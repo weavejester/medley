@@ -267,6 +267,41 @@
     (is (= (into [] (m/indexed) [])
            []))))
 
+(deftest test-insert-nth
+  (testing "sequences"
+    (is (= (m/insert-nth 0 :a [1 2 3 4]) [:a 1 2 3 4]))
+    (is (= (m/insert-nth 1 :a [1 2 3 4]) [1 :a 2 3 4]))
+    (is (= (m/insert-nth 3 :a [1 2 3 4]) [1 2 3 :a 4]))
+    (is (= (m/insert-nth 4 :a [1 2 3 4]) [1 2 3 4 :a])))
+
+  (testing "transducers"
+    (is (= (into [] (m/insert-nth 0 :a) [1 2 3 4]) [:a 1 2 3 4]))
+    (is (= (into [] (m/insert-nth 1 :a) [1 2 3 4]) [1 :a 2 3 4]))
+    (is (= (into [] (m/insert-nth 3 :a) [1 2 3 4]) [1 2 3 :a 4]))
+    (is (= (into [] (m/insert-nth 4 :a) [1 2 3 4]) [1 2 3 4 :a]))))
+
+(deftest test-remove-nth
+  (testing "sequences"
+    (is (= (m/remove-nth 0 [1 2 3 4]) [2 3 4]))
+    (is (= (m/remove-nth 1 [1 2 3 4]) [1 3 4]))
+    (is (= (m/remove-nth 3 [1 2 3 4]) [1 2 3])))
+
+  (testing "transducers"
+    (is (= (into [] (m/remove-nth 0) [1 2 3 4]) [2 3 4]))
+    (is (= (into [] (m/remove-nth 1) [1 2 3 4]) [1 3 4]))
+    (is (= (into [] (m/remove-nth 3) [1 2 3 4]) [1 2 3]))))
+
+(deftest test-replace-nth
+  (testing "sequences"
+    (is (= (m/replace-nth 0 :a [1 2 3 4]) [:a 2 3 4]))
+    (is (= (m/replace-nth 1 :a [1 2 3 4]) [1 :a 3 4]))
+    (is (= (m/replace-nth 3 :a [1 2 3 4]) [1 2 3 :a])))
+
+  (testing "transducers"
+    (is (= (into [] (m/replace-nth 0 :a) [1 2 3 4]) [:a 2 3 4]))
+    (is (= (into [] (m/replace-nth 1 :a) [1 2 3 4]) [1 :a 3 4]))
+    (is (= (into [] (m/replace-nth 3 :a) [1 2 3 4]) [1 2 3 :a]))))
+
 (deftest test-abs
   (is (= (m/abs -3) 3))
   (is (= (m/abs 2) 2))

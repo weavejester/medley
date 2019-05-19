@@ -319,6 +319,73 @@
   ([coll]
    (map-indexed vector coll)))
 
+(defn insert-nth
+  "Returns a lazy sequence of the items in coll, with a new item inserted at
+  the supplied index, followed by all subsequent items of the collection. Runs
+  in O(n) time."
+  {:added "1.2.0"}
+  ([index item]
+   (fn [rf]
+     (let [idx (volatile! (inc index))]
+       (fn
+         ([] (rf))
+         ([result]
+          (if (= @idx 1)
+            (rf (rf result item))
+            (rf result)))
+         ([result x]
+          (if (zero? (vswap! idx dec))
+            (rf (rf result item) x)
+            (rf result x)))))))
+  ([index item coll]
+   (lazy-seq
+    (if (zero? index)
+      (cons item coll)
+      (when (seq coll)
+        (cons (first coll) (insert-nth (dec index) item (rest coll))))))))
+
+(defn remove-nth
+  "Returns a lazy sequence of the items in coll, except for the item at the
+  supplied index. Runs in O(n) time."
+  {:added "1.2.0"}
+  ([index]
+   (fn [rf]
+     (let [idx (volatile! (inc index))]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (if (zero? (vswap! idx dec))
+            result
+            (rf result x)))))))
+  ([index coll]
+   (lazy-seq
+    (if (zero? index)
+      (rest coll)
+      (when (seq coll)
+        (cons (first coll) (remove-nth (dec index) (rest coll))))))))
+
+(defn replace-nth
+  "Returns a lazy sequence of the items in coll, with a new item replacing the
+  item at the supplied index. Runs in O(n) time."
+  {:added "1.2.0"}
+  ([index item]
+   (fn [rf]
+     (let [idx (volatile! (inc index))]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          (if (zero? (vswap! idx dec))
+            (rf result item)
+            (rf result x)))))))
+  ([index item coll]
+   (lazy-seq
+    (if (zero? index)
+      (cons item (rest coll))
+      (when (seq coll)
+        (cons (first coll) (replace-nth (dec index) item (rest coll))))))))
+
 (defn abs
   "Returns the absolute value of a number."
   [x]
