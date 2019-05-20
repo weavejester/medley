@@ -93,6 +93,20 @@
   [f coll]
   (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
 
+(defn map-kv-keys
+  "Maps a function over the key/value pairs of an associative collection, using
+  the return of the function as the new key."
+  {:added "1.2.0"}
+  [f coll]
+  (reduce-map (fn [xf] (fn [m k v] (xf m (f k v) v))) coll))
+
+(defn map-kv-vals
+  "Maps a function over the key/value pairs of an associative collection, using
+  the return of the function as the new value."
+  {:added "1.2.0"}
+  [f coll]
+  (reduce-map (fn [xf] (fn [m k v] (xf m k (f k v)))) coll))
+
 (defn filter-kv
   "Returns a new associative collection of the items in coll for which
   `(pred (key item) (val item))` returns true."

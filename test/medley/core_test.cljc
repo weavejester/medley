@@ -72,6 +72,22 @@
   (testing "map-vals with record"
     (is (= (m/map-vals inc (->MyRecord 1)) {:x 2}))))
 
+(deftest test-map-kv-keys
+  (is (= (m/map-kv-keys + {1 2, 2 4})
+         {3 2, 6 4}))
+  (is (= (m/map-kv-keys + (sorted-map 1 2, 2 4))
+         (sorted-map 3 2, 6 4)))
+  (is (= (m/map-kv-keys str (->MyRecord 1))
+         {":x1" 1})))
+
+(deftest test-map-kv-vals
+  (is (= (m/map-kv-vals + {1 2, 2 4})
+         {1 3, 2 6}))
+  (is (= (m/map-kv-vals + (sorted-map 1 2, 2 4))
+         (sorted-map 1 3, 2 6)))
+  (is (= (m/map-kv-vals str (->MyRecord 1))
+         {:x ":x1"})))
+
 (deftest test-filter-kv
   (is (= (m/filter-kv (fn [k v] (and (keyword? k) (number? v))) {"a" 1 :b 2 :c "d"})
          {:b 2}))
