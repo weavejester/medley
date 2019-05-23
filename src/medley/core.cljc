@@ -70,6 +70,14 @@
       (persistent! (reduce-kv (f assoc!) (transient (empty coll')) coll'))
       (reduce-kv (f assoc) (empty coll') coll'))))
 
+(defn- completing-rf
+  [rf-fn]
+  (fn [rf]
+    (fn
+      ([] (rf))
+      ([result] (rf result))
+      ([result x] (rf-fn rf result x)))))
+
 (defn map-entry
   "Create a map entry for a key and value pair."
   [k v]
@@ -80,18 +88,24 @@
   "Maps a function over the key/value pairs of an associate collection. Expects
   a function that takes two arguments, the key and value, and returns the new
   key and value as a collection of two elements."
-  [f coll]
-  (reduce-map (fn [xf] (fn [m k v] (let [[k v] (f k v)] (xf m k v)))) coll))
+  ([f]
+   (completing-rf (fn [rf result [k v]] (rf result (f k v)))))
+  ([f coll]
+   (reduce-map (fn [xf] (fn [m k v] (let [[k v] (f k v)] (xf m k v)))) coll)))
 
 (defn map-keys
   "Maps a function over the keys of an associative collection."
-  [f coll]
-  (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll))
+  ([f]
+   (completing-rf (fn [rf result [k v]] (rf result (map-entry (f k) v)))))
+  ([f coll]
+   (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll)))
 
 (defn map-vals
   "Maps a function over the values of an associative collection."
-  [f coll]
-  (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
+  ([f]
+   (completing-rf (fn [rf result [k v]] (rf result (map-entry k (f v))))))
+  ([f coll]
+   (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll)))
 
 (defn map-kv-keys
   "Maps a function over the key/value pairs of an associative collection, using
@@ -110,38 +124,44 @@
 (defn filter-kv
   "Returns a new associative collection of the items in coll for which
   `(pred (key item) (val item))` returns true."
-  [pred coll]
-  (reduce-map (fn [xf] (fn [m k v] (if (pred k v) (xf m k v) m))) coll))
+  ([pred]
+   (completing-rf (fn [rf result [k v]] (if (pred k v) (rf result (map-entry k v)) result))))
+  ([pred coll]
+   (reduce-map (fn [xf] (fn [m k v] (if (pred k v) (xf m k v) m))) coll)))
 
 (defn filter-keys
   "Returns a new associative collection of the items in coll for which
   `(pred (key item))` returns true."
-  [pred coll]
-  (reduce-map (fn [xf] (fn [m k v] (if (pred k) (xf m k v) m))) coll))
+  ([pred]
+   (completing-rf (fn [rf result [k v]] (if (pred k) (rf result (map-entry k v)) result))))
+  ([pred coll]
+   (reduce-map (fn [xf] (fn [m k v] (if (pred k) (xf m k v) m))) coll)))
 
 (defn filter-vals
   "Returns a new associative collection of the items in coll for which
   `(pred (val item))` returns true."
-  [pred coll]
-  (reduce-map (fn [xf] (fn [m k v] (if (pred v) (xf m k v) m))) coll))
+  ([pred]
+   (completing-rf (fn [rf result [k v]] (if (pred v) (rf result (map-entry k v)) result))))
+  ([pred coll]
+   (reduce-map (fn [xf] (fn [m k v] (if (pred v) (xf m k v) m))) coll)))
 
 (defn remove-kv
   "Returns a new associative collection of the items in coll for which
   `(pred (key item) (val item))` returns false."
-  [pred coll]
-  (filter-kv (complement pred) coll))
+  ([pred] (filter-kv (complement pred)))
+  ([pred coll] (filter-kv (complement pred) coll)))
 
 (defn remove-keys
   "Returns a new associative collection of the items in coll for which
   `(pred (key item))` returns false."
-  [pred coll]
-  (filter-keys (complement pred) coll))
+  ([pred] (filter-keys (complement pred)))
+  ([pred coll] (filter-keys (complement pred) coll)))
 
 (defn remove-vals
   "Returns a new associative collection of the items in coll for which
   `(pred (val item))` returns false."
-  [pred coll]
-  (filter-vals (complement pred) coll))
+  ([pred] (filter-vals (complement pred)))
+  ([pred coll] (filter-vals (complement pred) coll)))
 
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
