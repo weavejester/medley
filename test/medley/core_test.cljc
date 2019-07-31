@@ -36,6 +36,23 @@
   (is (= (m/update-existing {:a nil} :a str) {:a ""}))
   (is (= (m/update-existing {} :a str) {})))
 
+(deftest test-update-existing-in
+  (is (= (m/update-existing-in {:a 1} [:a] inc) {:a 2}))
+  (is (= (m/update-existing-in {:a 1 :b 2} [:a] inc) {:a 2 :b 2}))
+  (is (= (m/update-existing-in {:b 2} [:a] inc) {:b 2}))
+  (is (= (m/update-existing-in {:a nil} [:a] str) {:a ""}))
+  (is (= (m/update-existing-in {} [:a] str) {}))
+  (is (= (m/update-existing-in {:a [:b {:c 42} :d]} [:a 1 :c] inc)
+         {:a [:b {:c 43} :d]}))
+  (is (= (m/update-existing-in {:a [:b {:c 42} :d]} [:a 1 :c] + 7)
+         {:a [:b {:c 49} :d]}))
+  (is (= (m/update-existing-in {:a [:b {:c 42} :d]} [:a 1 :c] + 3 4)
+         {:a [:b {:c 49} :d]}))
+  (is (= (m/update-existing-in {:a [:b {:c 42} :d]} [:a 1 :c] + 3 3 1)
+         {:a [:b {:c 49} :d]}))
+  (is (= (m/update-existing-in {:a [:b {:c 42} :d]} [:a 1 :c] vector 9 10 11 12 13 14)
+         {:a [:b {:c [42 9 10 11 12 13 14]} :d]})))
+
 (deftest test-map-entry
   (is (= (key (m/map-entry :a 1)) :a))
   (is (= (val (m/map-entry :a 1)) 1))
