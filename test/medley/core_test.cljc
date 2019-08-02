@@ -70,7 +70,20 @@
   (is (= (m/map-vals inc (sorted-map :a 1 :b 2))
          (sorted-map :a 2 :b 3)))
   (testing "map-vals with record"
-    (is (= (m/map-vals inc (->MyRecord 1)) {:x 2}))))
+    (is (= (m/map-vals inc (->MyRecord 1)) {:x 2})))
+  (testing "multiple collections"
+    (is (= (m/map-vals + {:a 1 :b 2 :c 3} {:a 4 :c 5 :d 6})
+           {:a 5, :c 8}))
+    (is (= (m/map-vals min
+                       (sorted-map :z 10 :y 8 :x 4)
+                       {:x 7, :y 14, :z 13}
+                       {:x 11, :y 6, :z 9}
+                       {:x 19, :y 3, :z 2}
+                       {:x 4, :y 0, :z 16}
+                       {:x 17, :y 14, :z 13})
+           (sorted-map :x 4 :y 0 :z 2)))
+    (is (= (m/map-vals #(%1 %2) {:a nil? :b some?} {:b nil})
+           {:b false}))))
 
 (deftest test-map-kv-keys
   (is (= (m/map-kv-keys + {1 2, 2 4})

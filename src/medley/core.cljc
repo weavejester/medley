@@ -89,9 +89,20 @@
   (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll))
 
 (defn map-vals
-  "Maps a function over the values of an associative collection."
-  [f coll]
-  (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
+  "Maps a function over the values of one or more associative collections.
+  The function should accept number-of-colls arguments. Any keys which are not
+  shared among all collections are ignored."
+  ([f coll]
+   (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
+  ([f c1 & colls]
+   (reduce-map
+    (fn [xf]
+      (fn [m k v]
+        (if (every? #(contains? % k) colls)
+          (xf m k (apply f v (map #(get % k) colls)))
+          m)))
+    c1)))
+
 
 (defn map-kv-keys
   "Maps a function over the key/value pairs of an associative collection, using
