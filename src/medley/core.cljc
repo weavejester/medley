@@ -60,6 +60,20 @@
   ([m k f x y z & more]
    (if-let [kv (find m k)] (assoc m k (apply f (val kv) x y z more)) m)))
 
+(defn update-existing-in
+  "Updates a value in a nested associative structure, if and only if the key
+  path exists. See: `clojure.core/update-in`."
+  {:added "1.3.0"}
+  [m ks f & args]
+  (let [up (fn up [m ks f args]
+             (let [[k & ks] ks]
+               (if-let [kv (find m k)]
+                 (if ks
+                   (assoc m k (up (val kv) ks f args))
+                   (assoc m k (apply f (val kv) args)))
+                 m)))]
+    (up m ks f args)))
+
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
      :cljs (satisfies? cljs.core.IEditableCollection coll)))
