@@ -18,7 +18,7 @@
    (reduce (fn [_ x] (if (pred x) (reduced x))) nil coll)))
 
 (defn dissoc-in
-  "Dissociate a value in a nested assocative structure, identified by a sequence
+  "Dissociate a value in a nested associative structure, identified by a sequence
   of keys. Any collections left empty by the operation will be dissociated from
   their containing structures."
   ([m ks]
@@ -91,7 +91,7 @@
      :cljs (cljs.core.MapEntry. k v nil)))
 
 (defn map-kv
-  "Maps a function over the key/value pairs of an associate collection. Expects
+  "Maps a function over the key/value pairs of an associative collection. Expects
   a function that takes two arguments, the key and value, and returns the new
   key and value as a collection of two elements."
   [f coll]
@@ -463,7 +463,7 @@
 
 (defn ex-cause
   "Returns the cause attached to the given ExceptionInfo/Throwable object. For
-  all other types returns nil. Same as `cljs.core/ex-clause` except it works for
+  all other types returns nil. Same as `cljs.core/ex-cause` except it works for
   Clojure as well as ClojureScript."
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getCause ^Throwable ex))
