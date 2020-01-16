@@ -201,6 +201,7 @@
 (deftest test-deep-merge
   (is (= (m/deep-merge) nil))
   (is (= (m/deep-merge {:a 1}) {:a 1}))
+  (is (= (m/deep-merge {:a 1} nil) {:a 1}))
   (is (= (m/deep-merge {:a 1} {:a 2 :b 3}) {:a 2 :b 3}))
   (is (= (m/deep-merge {:a {:b 1 :c 2}} {:a {:b 2 :d 3}}) {:a {:b 2 :c 2 :d 3}}))
   (is (= (m/deep-merge {:a {:b 1}} {:a 1}) {:a 1}))
