@@ -216,14 +216,12 @@
   overwritten, as in `clojure.core/merge`."
   {:arglists '([& maps])
    :added    "1.1.0"}
-  ([])
-  ([a] a)
-  ([a b]
-   (if (and (map? a) (map? b))
-     (merge-with deep-merge a b)
-     b))
-  ([a b & more]
-   (apply merge-with deep-merge a b more)))
+  ([& maps]
+   (apply merge-with (fn [& args]
+                       (if (every? map? args)
+                         (apply deep-merge args)
+                         (last args)))
+          maps)))
 
 (defn mapply
   "Applies a function f to the argument list formed by concatenating
