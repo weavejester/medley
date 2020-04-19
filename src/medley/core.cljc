@@ -4,7 +4,8 @@
   (:refer-clojure :exclude [boolean? ex-cause ex-message uuid uuid? random-uuid]))
 
 (defn find-first
-  "Finds the first item in a collection that matches a predicate."
+  "Finds the first item in a collection that matches a predicate. Returns a
+  transducer when no collection is provided."
   ([pred]
    (fn [rf]
      (fn
@@ -273,7 +274,8 @@
 
 (defn distinct-by
   "Returns a lazy sequence of the elements of coll, removing any elements that
-  return duplicate values when passed to a function f."
+  return duplicate values when passed to a function f. Returns a transducer
+  when no collection is provided."
   ([f]
    (fn [rf]
      (let [seen (volatile! #{})]
@@ -300,7 +302,8 @@
 
 (defn dedupe-by
   "Returns a lazy sequence of the elements of coll, removing any **consecutive**
-  elements that return duplicate values when passed to a function f."
+  elements that return duplicate values when passed to a function f. Returns a
+  transducer when no collection is provided."
   ([f]
    (fn [rf]
      (let [pv (volatile! ::none)]
@@ -319,7 +322,8 @@
 
 (defn take-upto
   "Returns a lazy sequence of successive items from coll up to and including
-  the first item for which `(pred item)` returns true."
+  the first item for which `(pred item)` returns true. Returns a transducer
+  when no collection is provided."
   ([pred]
    (fn [rf]
      (fn
@@ -338,7 +342,8 @@
 
 (defn drop-upto
   "Returns a lazy sequence of the items in coll starting *after* the first item
-  for which `(pred item)` returns true."
+  for which `(pred item)` returns true. Returns a transducer when no collection
+  is provided."
   ([pred]
    (fn [rf]
      (let [dv (volatile! true)]
@@ -354,7 +359,8 @@
 
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
-  value in coll, and index its position starting from zero."
+  value in coll, and index its position starting from zero. Returns a transducer
+  when no collection is provided."
   ([]
    (fn [rf]
      (let [i (volatile! -1)]
@@ -369,7 +375,7 @@
 (defn insert-nth
   "Returns a lazy sequence of the items in coll, with a new item inserted at
   the supplied index, followed by all subsequent items of the collection. Runs
-  in O(n) time."
+  in O(n) time. Returns a transducer when no collection is provided."
   {:added "1.2.0"}
   ([index item]
    (fn [rf]
@@ -393,7 +399,8 @@
 
 (defn remove-nth
   "Returns a lazy sequence of the items in coll, except for the item at the
-  supplied index. Runs in O(n) time."
+  supplied index. Runs in O(n) time. Returns a transducer when no collection is
+  provided."
   {:added "1.2.0"}
   ([index]
    (fn [rf]
@@ -414,7 +421,8 @@
 
 (defn replace-nth
   "Returns a lazy sequence of the items in coll, with a new item replacing the
-  item at the supplied index. Runs in O(n) time."
+  item at the supplied index. Runs in O(n) time. Returns a transducer when no
+  collection is provided."
   {:added "1.2.0"}
   ([index item]
    (fn [rf]
