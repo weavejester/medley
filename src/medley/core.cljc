@@ -37,7 +37,7 @@
      (dissoc-in m ks))))
 
 (defn assoc-some
-  "Associates a key with a value in a map, if and only if the value is not nil."
+  "Associates a key k, with a value v in a map m, if and only if v is not nil."
   ([m k v]
    (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
