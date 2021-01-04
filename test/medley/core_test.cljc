@@ -400,3 +400,8 @@
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
     (is (not= x y))))
+
+(deftest test-regexp?
+  (is (m/regexp? #"x"))
+  (is (not (m/regexp? "x")))
+  (is (not (m/regexp? nil))))
