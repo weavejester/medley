@@ -1,5 +1,5 @@
 (ns medley.core-test
-  #?(:clj (:import [clojure.lang ArityException]))
+  #?(:clj (:import [clojure.lang ArityException ExceptionInfo]))
   (:require #?(:clj  [clojure.test :refer :all]
                :cljs [cljs.test :refer-macros [deftest is testing]])
             [medley.core :as m]))
@@ -400,3 +400,11 @@
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
     (is (not= x y))))
+
+(deftest test-getx
+  (is (= 1 (m/getx {:a 1} :a)))
+  (is (thrown? ExceptionInfo (m/getx {} :a))))
+
+(deftest test-getx-in
+  (is (= 1 (m/getx-in {:a {:b 1}} [:a :b])))
+  (is (thrown? ExceptionInfo (m/getx-in {:a {}} [:a :b]))))
