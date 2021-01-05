@@ -1,7 +1,7 @@
 (ns medley.core
   "A small collection of useful, mostly pure functions that might not look out
   of place in the clojure.core namespace."
-  (:refer-clojure :exclude [boolean? ex-cause ex-message uuid uuid? random-uuid]))
+  (:refer-clojure :exclude [boolean? ex-cause ex-message uuid uuid? random-uuid regexp?]))
 
 (defn find-first
   "Finds the first item in a collection that matches a predicate. Returns a
@@ -502,3 +502,8 @@
   []
   #?(:clj  (java.util.UUID/randomUUID)
      :cljs (cljs.core/random-uuid)))
+
+(defn regexp?
+  "Returns true if the value is a regular expression."
+  [x]
+  (instance? #?(:clj java.util.regex.Pattern :cljs js/RegExp) x))
