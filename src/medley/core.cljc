@@ -507,3 +507,14 @@
   "Returns true if the value is a regular expression."
   [x]
   (instance? #?(:clj java.util.regex.Pattern :cljs js/RegExp) x))
+
+(defn nil-or-empty?
+  "An updated version of the clojure.core/empty? function that does not fail
+  when the input is not a collection."
+  [v]
+  (if (nil? v)
+    true
+    (cond
+      (coll? v) (empty? v)
+      (string? v) (clojure.string/blank? v)
+      :else false)))

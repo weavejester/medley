@@ -405,3 +405,24 @@
   (is (m/regexp? #"x"))
   (is (not (m/regexp? "x")))
   (is (not (m/regexp? nil))))
+
+(deftest nil-or-empty?-test
+  (testing "nil-or-empty? given empty input should return true"
+    (is (true? (m/nil-or-empty? nil)))
+    (is (true? (m/nil-or-empty? "")))
+    (is (true? (m/nil-or-empty? "           ")))
+    (is (true? (m/nil-or-empty? '())))
+    (is (true? (m/nil-or-empty? [])))
+    (is (true? (m/nil-or-empty? {})))
+    (is (true? (m/nil-or-empty? #{})))
+    (is (true? (m/nil-or-empty? (hash-map)))))
+
+  (testing "nil-or-empty? given non empty input should return false"
+    (is (false? (m/nil-or-empty? 1)))
+    (is (false? (m/nil-or-empty? #?(:clj (Object.) :cljs (js-obj)))))
+    (is (false? (m/nil-or-empty? "ss")))
+    (is (false? (m/nil-or-empty? "    ss        ")))
+    (is (false? (m/nil-or-empty? '(1))))
+    (is (false? (m/nil-or-empty? [:a :b])))
+    (is (false? (m/nil-or-empty? {:a 1, :b 2})))
+    (is (false? (m/nil-or-empty? #{"s" "c" "ab"})))))
