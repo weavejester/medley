@@ -208,6 +208,7 @@
   (is (= (m/deep-merge {:a 1} {:b 2} {:b 3 :c 4}) {:a 1 :b 3 :c 4}))
   (is (= (m/deep-merge {:a {:b {:c {:d 1}}}} {:a {:b {:c {:e 2}}}}) {:a {:b {:c {:d 1 :e 2}}}}))
   (is (= (m/deep-merge {:a {:b [1 2]}} {:a {:b [3 4]}}) {:a {:b [3 4]}}))
+  (is (= (m/deep-merge {:a {:b [1 2]}} {:a {:b ^:assoc {}}}) {:a {:b {}}}))
   (is (= (m/deep-merge (->MyRecord 1) {:x 2}) (->MyRecord 2)))
   (is (= (m/deep-merge {:a (->MyRecord 1)} {:a {:x 2 :y 3}}) {:a (map->MyRecord {:x 2 :y 3})})))
 

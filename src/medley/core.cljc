@@ -213,7 +213,8 @@
 (defn deep-merge
   "Recursively merges maps together. If all the maps supplied have nested maps
   under the same keys, these nested maps are merged. Otherwise the value is
-  overwritten, as in `clojure.core/merge`."
+  overwritten, as in `clojure.core/merge`. With ^:assoc meta tag,
+  you can set a new value for an attribute."
   {:arglists '([& maps])
    :added    "1.1.0"}
   ([])
@@ -225,9 +226,10 @@
                      v' (val e)]
                  (if (contains? m k)
                    (assoc m k (let [v (get m k)]
-                                (if (and (map? v) (map? v'))
-                                  (deep-merge v v')
-                                  v')))
+                                (cond
+                                  (and (map? v) (map? v') (:assoc (meta v'))) v'
+                                  (and (map? v) (map? v')) (deep-merge v v')
+                                  :else v')))
                    (assoc m k v'))))]
        (reduce merge-entry (or a {}) (seq b)))))
   ([a b & more]
