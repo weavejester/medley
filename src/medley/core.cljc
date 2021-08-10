@@ -125,6 +125,17 @@
   [f coll]
   (reduce-map (fn [xf] (fn [m k v] (xf m (f k v) v))) coll))
 
+(defn deep-map-kv-keys
+  "Deep version of map-kv-keys"
+  [f coll]
+  (reduce-kv
+    (fn [acc k v]
+      (if (map? v)
+        (assoc acc (f k) (deep-map-kv-keys f v))
+        (assoc acc (f k) v)))
+    (empty coll)
+    coll))
+
 (defn map-kv-vals
   "Maps a function over the key/value pairs of an associative collection, using
   the return of the function as the new value."
