@@ -507,3 +507,15 @@
   "Returns true if the value is a regular expression."
   [x]
   (instance? #?(:clj java.util.regex.Pattern :cljs js/RegExp) x))
+
+(defmacro ??
+  "Evaluates exprs one at a time, from left to right. If a form
+  returns not nil value, or returns that value and doesn't
+  evaluate any of the other expressions, otherwise it returns the
+  value of the last expression. (??) returns nil."
+  ([] nil)
+  ([x] x)
+  ([x & next]
+   `(if-some [val# ~x]
+      val#
+      (?? ~@next))))

@@ -1,5 +1,5 @@
 (ns medley.core-test
-  #?(:clj (:import [clojure.lang ArityException]))
+  #?(:clj (:import [clojure.lang ArityException ExceptionInfo]))
   (:require #?(:clj  [clojure.test :refer :all]
                :cljs [cljs.test :refer-macros [deftest is testing]])
             [medley.core :as m]))
@@ -405,3 +405,21 @@
   (is (m/regexp? #"x"))
   (is (not (m/regexp? "x")))
   (is (not (m/regexp? nil))))
+
+(deftest test-??
+  (is (nil? (m/??)))
+  (is (nil? (m/?? nil)))
+  (is (nil? (m/?? nil nil)))
+
+  (is (= false (m/?? false)))
+  (is (= false (m/?? false nil)))
+  (is (= false (m/?? nil false)))
+
+  (is (= true (m/?? true)))
+  (is (= true (m/?? true nil)))
+  (is (= true (m/?? nil true)))
+
+  (is (= 0 (m/?? 0 1 2 3 false nil)))
+
+  (is (= :ok (m/?? :ok (throw (ex-info "Fail" {})))))
+  (is (thrown? ExceptionInfo (m/?? nil (throw (ex-info "Fail" {}))))))
