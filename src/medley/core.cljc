@@ -16,7 +16,7 @@
           (ensure-reduced (rf result x))
           result)))))
   ([pred coll]
-   (reduce (fn [_ x] (if (pred x) (reduced x))) nil coll)))
+   (reduce (fn [_ x] (when (pred x) (reduced x))) nil coll)))
 
 (defn dissoc-in
   "Dissociate a value in a nested associative structure, identified by a sequence
@@ -77,7 +77,7 @@
 
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
-     :cljs (satisfies? cljs.core.IEditableCollection coll)))
+     :cljs (satisfies? cljs.core/IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
   (let [coll' (if (record? coll) (into {} coll) coll)]
@@ -89,7 +89,7 @@
   "Create a map entry for a key and value pair."
   [k v]
   #?(:clj  (clojure.lang.MapEntry. k v)
-     :cljs (cljs.core.MapEntry. k v nil)))
+     :cljs (cljs.core/MapEntry. k v nil)))
 
 (defn map-kv
   "Maps a function over the key/value pairs of an associative collection. Expects
@@ -171,14 +171,14 @@
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
   ([] #?(:clj  clojure.lang.PersistentQueue/EMPTY
-         :cljs cljs.core.PersistentQueue.EMPTY))
+         :cljs cljs.core/PersistentQueue.EMPTY))
   ([coll] (into (queue) coll)))
 
 (defn queue?
   "Returns true if x implements clojure.lang.PersistentQueue."
   [x]
   (instance? #?(:clj  clojure.lang.PersistentQueue
-                :cljs cljs.core.PersistentQueue) x))
+                :cljs cljs.core/PersistentQueue) x))
 
 (defn boolean?
   "Returns true if x is a boolean."
@@ -268,7 +268,7 @@
   ([c1 c2 & colls]
    (lazy-seq
     (let [ss (remove nil? (map seq (conj colls c2 c1)))]
-      (if (seq ss)
+      (when (seq ss)
         (concat (map first ss) (apply interleave-all (map rest ss))))))))
 
 (defn distinct-by
@@ -337,7 +337,7 @@
    (lazy-seq
     (when-let [s (seq coll)]
       (let [x (first s)]
-        (cons x (if-not (pred x) (take-upto pred (rest s)))))))))
+        (cons x (when-not (pred x) (take-upto pred (rest s)))))))))
 
 (defn drop-upto
   "Returns a lazy sequence of the items in coll starting *after* the first item
@@ -487,7 +487,7 @@
 (defn uuid?
   "Returns true if the value is a UUID."
   [x]
-  (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
+  (instance? #?(:clj java.util.UUID :cljs cljs.core/UUID) x))
 
 (defn uuid
   "Returns a UUID generated from the supplied string. Same as `cljs.core/uuid`
