@@ -506,5 +506,6 @@
 
 (defn regexp?
   "Returns true if the value is a regular expression."
+  {:added "1.4.0"}
   [x]
   (instance? #?(:clj java.util.regex.Pattern :cljs js/RegExp) x))
