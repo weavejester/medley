@@ -13,7 +13,11 @@ and limits itself to a small set of general-purpose functions.
 
 ## Installation
 
-To install, add the following to your project `:dependencies`:
+Add the following dependency to your deps.edn file:
+
+    medley/medley {:mvn/version "1.4.0"}
+
+Or to your Leiningen project file:
 
     [medley "1.4.0"]
 
