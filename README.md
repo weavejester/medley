@@ -15,7 +15,7 @@ and limits itself to a small set of general-purpose functions.
 
 To install, add the following to your project `:dependencies`:
 
-    [medley "1.3.0"]
+    [medley "1.4.0"]
 
 ## Breaking Changes
 
