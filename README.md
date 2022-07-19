@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/weavejester/medley.svg?branch=master)](https://travis-ci.org/weavejester/medley)
 
-Medley is a lightweight Clojure/ClojureScript library of useful,
+Medley is a lightweight Clojure/ClojureScript/ClojureCLR library of useful,
 *mostly* pure functions that are "missing" from clojure.core.
 
 Medley has a tighter focus than [flatland/useful][] or [Plumbing][],
@@ -20,6 +20,10 @@ Add the following dependency to your deps.edn file:
 Or to your Leiningen project file:
 
     [medley "1.4.0"]
+
+Or NuGet Reference
+
+    PM> Install-Package medley
 
 ## Breaking Changes
 

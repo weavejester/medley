@@ -1,2 +1,14 @@
 language: clojure
+before_install:
+  # Install mono
+  - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+  - sudo apt install apt-transport-https ca-certificates
+  - echo "deb https://download.mono-project.com/repo/ubuntu stable-xenial main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+  - sudo apt update
+  - sudo apt install mono-complete
+  # Download ClojureCLR assemblies
+  - curl --insecure -f -L -o clojure-clr-1.10.0-Release-net4.6.1.zip https://sourceforge.net/projects/clojureclr/files/clojure-clr-1.10.0-Release-net4.6.1.zip/download
+  - unzip clojure-clr-1.10.0-Release-net4.6.1.zip
+  - chmod +x Clojure.Main461.exe Clojure.Compile.exe
+  - export CLJCLR15_40=`pwd`
 script: lein test-all
