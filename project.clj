@@ -3,8 +3,6 @@
   :url "https://github.com/weavejester/medley"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  ;; NOTE: :dependencies not included for ClojureCLR as per lein-clr version
-  ;; 0.2.2
   :dependencies [[org.clojure/clojure "1.9.0"]]
   :plugins [[lein-codox "0.10.8"]
             [lein-cljsbuild "1.1.7"]
