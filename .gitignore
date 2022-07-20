@@ -9,5 +9,3 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /.cpcache
-/src/medley/bin
-/src/medley/obj
