@@ -1,8 +1,8 @@
 (ns medley.core-test
   #?(:clj (:import [clojure.lang ArityException]))
   (:require #?(:clj  [clojure.test :refer :all]
-               :cljs [cljs.test :refer-macros [deftest is testing]]
-               :cljr [clojure.test :refer :all])
+               :cljr [clojure.test :refer :all]
+               :cljs [cljs.test :refer-macros [deftest is testing]])
             [medley.core :as m]))
 
 (deftest test-find-first
@@ -158,19 +158,19 @@
 (deftest test-queue
   (testing "empty"
     #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue)))
-       :cljs (is (instance? cljs.core.PersistentQueue (m/queue)))
-       :cljr (is (instance? clojure.lang.PersistentQueue (m/queue))))
+       :cljr (is (instance? clojure.lang.PersistentQueue (m/queue)))
+       :cljs (is (instance? cljs.core.PersistentQueue (m/queue))))
     (is (empty? (m/queue))))
   (testing "not empty"
     #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3])))
-       :cljs (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3])))
-       :cljr (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3]))))
+       :cljr (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3])))
+       :cljs (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3]))))
     (is (= (first (m/queue [1 2 3])) 1))))
 
 (deftest test-queue?
   #?(:clj  (is (m/queue? clojure.lang.PersistentQueue/EMPTY))
-     :cljs (is (m/queue? cljs.core.PersistentQueue.EMPTY))
-     :cljr (is (m/queue? clojure.lang.PersistentQueue/EMPTY)))
+     :cljr (is (m/queue? clojure.lang.PersistentQueue/EMPTY))
+     :cljs (is (m/queue? cljs.core.PersistentQueue.EMPTY)))
   (is (not (m/queue? []))))
 
 (deftest test-boolean?
@@ -384,8 +384,8 @@
 (deftest test-ex-message
   (is (= (m/ex-message (ex-info "foo" {})) "foo"))
   (is (= (m/ex-message (new #?(:clj Exception
-                               :cljs js/Error
-                               :cljr Exception) "bar")) "bar")))
+                               :cljr Exception
+                               :cljs js/Error) "bar")) "bar")))
 
 (deftest test-ex-cause
   (let [cause (new #?(:clj Exception :cljs js/Error :cljr Exception) "foo")]
@@ -403,19 +403,19 @@
 (deftest test-uuid
   (let [x (m/uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6")]
     (is (instance? #?(:clj java.util.UUID
-                      :cljs cljs.core.UUID
-                      :cljr System.Guid) x))
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) x))
     (is (= x #uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6"))))
 
 (deftest test-random-uuid
   (let [x (m/random-uuid)
         y (m/random-uuid)]
     (is (instance? #?(:clj java.util.UUID
-                      :cljs cljs.core.UUID
-                      :cljr System.Guid) x))
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) x))
     (is (instance? #?(:clj java.util.UUID
-                      :cljs cljs.core.UUID
-                      :cljr System.Guid) y))
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) y))
     (is (not= x y))))
 
 (deftest test-regexp?
