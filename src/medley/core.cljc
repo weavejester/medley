@@ -78,8 +78,8 @@
 
 (defn- editable? [coll]
   #?(:clj  (instance? clojure.lang.IEditableCollection coll)
-     :cljs (satisfies? cljs.core/IEditableCollection coll)
-     :cljr (instance? clojure.lang.IEditableCollection coll)))
+     :cljr (instance? clojure.lang.IEditableCollection coll)
+     :cljs (satisfies? cljs.core/IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
   (let [coll' (if (record? coll) (into {} coll) coll)]
@@ -91,8 +91,8 @@
   "Create a map entry for a key and value pair."
   [k v]
   #?(:clj  (clojure.lang.MapEntry. k v)
-     :cljs (cljs.core/MapEntry. k v nil)
-     :cljr (clojure.lang.MapEntry. k v)))
+     :cljr (clojure.lang.MapEntry. k v)
+     :cljs (cljs.core/MapEntry. k v nil)))
 
 (defn map-kv
   "Maps a function over the key/value pairs of an associative collection. Expects
@@ -174,23 +174,23 @@
 (defn queue
   "Creates an empty persistent queue, or one populated with a collection."
   ([] #?(:clj  clojure.lang.PersistentQueue/EMPTY
-         :cljs cljs.core/PersistentQueue.EMPTY
-         :cljr clojure.lang.PersistentQueue/EMPTY))
+         :cljr clojure.lang.PersistentQueue/EMPTY
+         :cljs cljs.core/PersistentQueue.EMPTY))
   ([coll] (into (queue) coll)))
 
 (defn queue?
   "Returns true if x implements clojure.lang.PersistentQueue."
   [x]
   (instance? #?(:clj  clojure.lang.PersistentQueue
-                :cljs cljs.core/PersistentQueue
-                :cljr clojure.lang.PersistentQueue) x))
+                :cljr clojure.lang.PersistentQueue
+                :cljs cljs.core/PersistentQueue) x))
 
 (defn boolean?
   "Returns true if x is a boolean."
   [x]
   #?(:clj  (instance? Boolean x)
-     :cljs (or (true? x) (false? x))
-     :cljr (instance? Boolean x)))
+     :cljr (instance? Boolean x)
+     :cljs (or (true? x) (false? x))))
 
 (defn least
   "Return the least argument (as defined by the compare function) in O(n) time."
@@ -462,14 +462,14 @@
                 (if (compare-and-set! atom value (f value))
                   value
                   (recur))))
-      :cljs (let [value @atom]
-              (reset! atom (f value))
-              value)
       :cljr (loop []
               (let [value @atom]
                 (if (compare-and-set! atom value (f value))
                   value
-                  (recur))))))
+                  (recur))))
+      :cljs (let [value @atom]
+              (reset! atom (f value))
+              value)))
   ([atom f & args]
    (deref-swap! atom #(apply f % args))))
 
@@ -485,9 +485,9 @@
   Clojure and ClojureCLR as well as ClojureScript."
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getMessage ^Throwable ex))
-     :cljs (cljs.core/ex-message ex)
      ;; No Throwable type so use generic Exception instead
-     :cljr (when (instance? Exception ex) (.Message ^Exception ex))))
+     :cljr (when (instance? Exception ex) (.Message ^Exception ex))
+     :cljs (cljs.core/ex-message ex)))
 
 (defn ex-cause
   "Returns the cause attached to the given ExceptionInfo/Throwable object. For
@@ -495,13 +495,13 @@
   Clojure and ClojureCLR as well as ClojureScript."
   [ex]
   #?(:clj  (when (instance? Throwable ex) (.getCause ^Throwable ex))
-     :cljs (cljs.core/ex-cause ex)
-     :cljr (when (instance? Exception ex) (.InnerException ^Exception ex))))
+     :cljr (when (instance? Exception ex) (.InnerException ^Exception ex))
+     :cljs (cljs.core/ex-cause ex)))
 
 (defn uuid?
   "Returns true if the value is a UUID."
   [x]
-  (instance? #?(:clj java.util.UUID :cljs cljs.core/UUID :cljr System.Guid) x))
+  (instance? #?(:clj java.util.UUID :cljr System.Guid :cljs cljs.core/UUID) x))
 
 (defn uuid
   "Returns a UUID generated from the supplied string. Same as `cljs.core/uuid`
@@ -509,23 +509,23 @@
   in ClojureCLR it returns a `System.Guid` object."
   [s]
   #?(:clj  (java.util.UUID/fromString s)
-     :cljs (cljs.core/uuid s)
-     :cljr (Guid. s)))
+     :cljr (Guid. s)
+     :cljs (cljs.core/uuid s)))
 
 (defn random-uuid
   "Generates a new random UUID. Same as `cljs.core/random-uuid` except it works
   for Clojure and ClojureCLR as well as ClojureScript."
   []
   #?(:clj  (java.util.UUID/randomUUID)
-     :cljs (cljs.core/random-uuid)
      ;; NOTE: Not recommended for cryptographic purposes
      ;; https://docs.microsoft.com/en-us/dotnet/api/system.guid.newguid?view=net-6.0
-     :cljr (System.Guid/NewGuid)))
+     :cljr (System.Guid/NewGuid)
+     :cljs (cljs.core/random-uuid)))
 
 (defn regexp?
   "Returns true if the value is a regular expression."
   {:added "1.4.0"}
   [x]
   (instance? #?(:clj java.util.regex.Pattern
-                :cljs js/RegExp
-                :cljr System.Text.RegularExpressions.Regex) x))
+                :cljr System.Text.RegularExpressions.Regex
+                :cljs js/RegExp) x))
