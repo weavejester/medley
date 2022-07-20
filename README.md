@@ -21,7 +21,7 @@ Or to your Leiningen project file:
 
     [medley "1.4.0"]
 
-Or NuGet Reference
+Or via NuGet for ClojureCLR:
 
     PM> Install-Package medley
 
