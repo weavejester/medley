@@ -20,18 +20,15 @@
                 :output-dir "target"
                 :main medley.test-runner
                 :optimizations :simple}}}}
-  :clr {:cmd-templates  {:clj-exe   [#_"mono" [CLJCLR15_40 %1]]
-                         :clj-dep   [#_"mono" ["target/clr/clj/Debug 4.0" %1]]
-                         :clj-url   "https://github.com/downloads/clojure/clojure-clr/clojure-clr-1.4.0-Debug-4.0.zip"
-                         :clj-zip   "clojure-clr-1.4.0-Debug-4.0.zip"
+  :clr {:cmd-templates  {:clj-dep   ["mono" ["target/clr/clj" %1]]
+                         :clj-url   "https://sourceforge.net/projects/clojureclr/files/clojure-clr-1.10.0-Release-net4.6.1.zip/download"
+                         :clj-zip   "clojure-clr-1.10.0-Release-net4.6.1.zip"
                          :curl      ["curl" "--insecure" "-f" "-L" "-o" %1 %2]
-                         :nuget-ver [#_"mono" [*PATH "nuget.exe"] "install" %1 "-Version" %2]
-                         :nuget-any [#_"mono" [*PATH "nuget.exe"] "install" %1]
-                         :unzip     ["unzip" "-d" %1 %2]
-                         :wget      ["wget" "--no-check-certificate" "--no-clobber" "-O" %1 %2]}
-        :deps-cmds     []
-        :main-cmd      [:clj-exe "Clojure.Main461.exe"]
-        :compile-cmd   [:clj-exe "Clojure.Compile.exe"]}
+                         :unzip     ["unzip" "-d" %1 %2]}
+        :deps-cmds     [[:curl  :clj-zip :clj-url]
+                        [:unzip "../clj" :clj-zip]]
+        :main-cmd      [:clj-dep "Clojure.Main461.exe"]
+        :compile-cmd   [:clj-dep "Clojure.Compile.exe"]}
   :doo {:paths {:rhino "lein run -m org.mozilla.javascript.tools.shell.Main"}}
   :aliases
   {"test-cljs" ["doo" "rhino" "test" "once"]
