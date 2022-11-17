@@ -301,6 +301,46 @@
     (is (= (into [] (m/drop-upto zero?) [0 1 2 3 4 5 6]) [1 2 3 4 5 6]))
     (is (= (into [] (m/drop-upto zero?) [1 2 3 4 5 6 7]) []))))
 
+(deftest test-partition-after
+  (testing "sequences"
+    (is (= (m/partition-after identity nil) '()))
+    (is (= (m/partition-after even? [1 3 5 6 8 9 10 11]) '((1 3 5 6) (8) (9 10) (11))))
+    (is (= (m/partition-after even? [2 4 6 8 10]) '((2) (4) (6) (8) (10))))
+    (is (= (m/partition-after even? [1 3 5 7 9]) '((1 3 5 7 9)))))
+
+  (testing "transducers"
+    (is (= (transduce (m/partition-after identity) conj nil) []))
+    (is (= (transduce (m/partition-after even?) conj [1 3 5 6 8 9 10 11])
+           [[1 3 5 6] [8] [9 10] [11]]))
+    (is (= (sequence (m/partition-after even?) [2 4 6 8 10]) '([2] [4] [6] [8] [10])))
+    (is (= (into [] (m/partition-after even?) [1 3 5 7 9]) [[1 3 5 7 9]]))
+    (is (= (transduce (m/partition-after even?)
+                      (completing (fn [coll x]
+                                    (cond-> (conj coll x) (= [8] x) reduced)))
+                      []
+                      [1 3 5 6 8 9])
+           [[1 3 5 6] [8]]))))
+
+(deftest test-partition-before
+  (testing "sequences"
+    (is (= (m/partition-before identity nil) '()))
+    (is (= (m/partition-before even? [1 3 5 6 8 9 10 11]) '((1 3 5) (6) (8 9) (10 11))))
+    (is (= (m/partition-before even? [2 4 6 8 10]) '((2) (4) (6) (8) (10))))
+    (is (= (m/partition-before even? [1 3 5 7 9]) '((1 3 5 7 9)))))
+
+  (testing "transducers"
+    (is (= (transduce (m/partition-before identity) conj nil) []))
+    (is (= (transduce (m/partition-before even?) conj [1 3 5 6 8 9 10 11])
+           [[1 3 5] [6] [8 9] [10 11]]))
+    (is (= (sequence (m/partition-before even?) [2 4 6 8 10]) '([2] [4] [6] [8] [10])))
+    (is (= (into [] (m/partition-before even?) [1 3 5 7 9]) [[1 3 5 7 9]]))
+    (is (= (transduce (m/partition-before even?)
+                      (completing (fn [coll x]
+                                    (cond-> (conj coll x) (= [6] x) reduced)))
+                      []
+                      [1 3 5 6 8 9])
+           [[1 3 5] [6]]))))
+
 (deftest test-indexed
   (testing "sequences"
     (is (= (m/indexed [:a :b :c :d])
