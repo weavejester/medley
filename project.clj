@@ -25,7 +25,7 @@
    "test-clj"  ["with-profile" "default:+1.7:+1.8:+1.10:+1.11" "test"]
    "test-all"  ["do" ["test-clj"] ["test-cljs"]]}
   :profiles
-  {:provided {:dependencies [[org.clojure/clojurescript "1.11.60"]]}
+  {:provided {:dependencies [[org.clojure/clojurescript "1.10.439"]]}
    :test {:dependencies [[org.mozilla/rhino "1.7.14"]]}
    :dev {:dependencies [[criterium "0.4.6"]]
          :jvm-opts ^:replace {}}
