@@ -357,6 +357,86 @@
   ([pred coll]
    (rest (drop-while (complement pred) coll))))
 
+(defn- mutable-list []
+  #?(:clj (java.util.ArrayList.) :cljs (js/Array.)))
+
+(defn- mutable-list-empty? [ml]
+  #?(:clj (.isEmpty ^java.util.ArrayList ml) :cljs (zero? (alength ml))))
+
+(defn- mutable-list->vector [ml]
+  (vec #?(:clj (.toArray ^java.util.ArrayList ml) :cljs (aclone ml))))
+
+(defn- mutable-list-clear! [ml]
+  #?(:clj (.clear ^java.util.ArrayList ml) :cljs (set! ml -length 0)))
+
+(defn- mutable-list-append! [ml x]
+  #?(:clj (.add ^java.util.ArrayList ml x) :cljs (.push ml x)))
+
+(defn partition-after
+  "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
+  true. Returns a transducer when no collection is provided."
+  {:added "1.5.0"}
+  ([pred]
+   (fn [rf]
+     (let [part (mutable-list)
+           split? (volatile! false)]
+       (fn
+         ([] (rf))
+         ([result]
+          (rf (if (mutable-list-empty? part)
+                result
+                (let [v (mutable-list->vector part)]
+                  (mutable-list-clear! part)
+                  (unreduced (rf result v))))))
+         ([result x]
+          (if @split?
+            (let [result (rf result (mutable-list->vector part))]
+              (mutable-list-clear! part)
+              (when-not (reduced? result) (mutable-list-append! part x))
+              (when-not (pred x) (vreset! split? false))
+              result)
+            (do (when (pred x) (vreset! split? true))
+                (mutable-list-append! part x)
+                result)))))))
+  ([pred coll]
+   (lazy-seq
+    (when-let [s (seq coll)]
+      (let [run (take-upto pred s)]
+        (cons run (partition-after pred (lazy-seq (drop (count run) s)))))))))
+
+(defn partition-before
+  "Returns a lazy sequence of partitions, splitting before `(pred item)` returns
+  true. Returns a transducer when no collection is provided."
+  {:added "1.5.0"}
+  ([pred]
+   (fn [rf]
+     (let [part (mutable-list)]
+       (fn
+         ([] (rf))
+         ([result]
+          (rf (if (mutable-list-empty? part)
+                result
+                (let [v (mutable-list->vector part)]
+                  (mutable-list-clear! part)
+                  (unreduced (rf result v))))))
+         ([result x]
+          (if (and (pred x) (not (mutable-list-empty? part)))
+            (let [result (rf result (mutable-list->vector part))]
+              (mutable-list-clear! part)
+              (when-not (reduced? result) (mutable-list-append! part x))
+              result)
+            (do (mutable-list-append! part x)
+                result)))))))
+  ([pred coll]
+   (let [cp (complement pred)]
+     ((fn part [coll]
+        (lazy-seq
+         (when-let [s (seq coll)]
+           (let [run (or (seq (take-while cp s))
+                         (cons (first s) (take-while cp (rest s))))]
+             (cons run (part (lazy-seq (drop (count run) s))))))))
+      coll))))
+
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
   value in coll, and index its position starting from zero. Returns a transducer
