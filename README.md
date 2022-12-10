@@ -21,7 +21,16 @@ Or to your Leiningen project file:
 
     [dev.weavejester/medley "1.5.0"]
 
-## Breaking Changes
+## Documentation
+
+* [API Docs](http://weavejester.github.io/medley/medley.core.html)
+
+## Ports
+
+* [Medley for the CLR](https://github.com/E-A-Griffin/medley) is kindly
+maintained by [Emma Griffin](https://github.com/E-A-Griffin).
+
+## Pre-1.0 Breaking Changes
 
 In 0.7.0 the minimum Clojure version was changed from 1.5.1 to 1.7.0
 to take advantage of [reader conditionals][]. The `update` function
@@ -33,10 +42,6 @@ a version prior to 0.6.0, please update your usage of `greatest` and
 `least`.
 
 [reader conditionals]: http://dev.clojure.org/display/design/Reader+Conditionals
-
-## Documentation
-
-* [API Docs](http://weavejester.github.io/medley/medley.core.html)
 
 ## License
 
