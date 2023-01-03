@@ -357,46 +357,31 @@
   ([pred coll]
    (rest (drop-while (complement pred) coll))))
 
-(defn- mutable-list []
-  #?(:clj (java.util.ArrayList.) :cljs (js/Array.)))
-
-(defn- mutable-list-empty? [ml]
-  #?(:clj (.isEmpty ^java.util.ArrayList ml) :cljs (zero? (alength ml))))
-
-(defn- mutable-list->vector [ml]
-  (vec #?(:clj (.toArray ^java.util.ArrayList ml) :cljs (aclone ml))))
-
-(defn- mutable-list-clear! [ml]
-  #?(:clj (.clear ^java.util.ArrayList ml) :cljs (set! ml -length 0)))
-
-(defn- mutable-list-append! [ml x]
-  #?(:clj (.add ^java.util.ArrayList ml x) :cljs (.push ml x)))
-
 (defn partition-after
   "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
   true. Returns a transducer when no collection is provided."
   {:added "1.5.0"}
   ([pred]
    (fn [rf]
-     (let [part (mutable-list)
+     (let [part #?(:clj (java.util.ArrayList.) :cljs (array-list))
            split? (volatile! false)]
        (fn
          ([] (rf))
          ([result]
-          (rf (if (mutable-list-empty? part)
+          (rf (if (.isEmpty part)
                 result
-                (let [v (mutable-list->vector part)]
-                  (mutable-list-clear! part)
+                (let [v (vec (.toArray part))]
+                  (.clear part)
                   (unreduced (rf result v))))))
          ([result x]
           (if @split?
-            (let [result (rf result (mutable-list->vector part))]
-              (mutable-list-clear! part)
-              (when-not (reduced? result) (mutable-list-append! part x))
+            (let [result (rf result (vec (.toArray part)))]
+              (.clear part)
+              (when-not (reduced? result) (.add part x))
               (when-not (pred x) (vreset! split? false))
               result)
             (do (when (pred x) (vreset! split? true))
-                (mutable-list-append! part x)
+                (.add part x)
                 result)))))))
   ([pred coll]
    (lazy-seq
@@ -410,22 +395,22 @@
   {:added "1.5.0"}
   ([pred]
    (fn [rf]
-     (let [part (mutable-list)]
+     (let [part #?(:clj (java.util.ArrayList.) :cljs (array-list))]
        (fn
          ([] (rf))
          ([result]
-          (rf (if (mutable-list-empty? part)
+          (rf (if (.isEmpty part)
                 result
-                (let [v (mutable-list->vector part)]
-                  (mutable-list-clear! part)
+                (let [v (vec (.toArray part))]
+                  (.clear part)
                   (unreduced (rf result v))))))
          ([result x]
-          (if (and (pred x) (not (mutable-list-empty? part)))
-            (let [result (rf result (mutable-list->vector part))]
-              (mutable-list-clear! part)
-              (when-not (reduced? result) (mutable-list-append! part x))
+          (if (and (pred x) (not (.isEmpty part)))
+            (let [result (rf result (vec (.toArray part)))]
+              (.clear part)
+              (when-not (reduced? result) (.add part x))
               result)
-            (do (mutable-list-append! part x)
+            (do (.add part x)
                 result)))))))
   ([pred coll]
    (let [cp (complement pred)]
