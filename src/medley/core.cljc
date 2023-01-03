@@ -268,7 +268,7 @@
         (or s1 s2)))))
   ([c1 c2 & colls]
    (lazy-seq
-    (let [ss (remove nil? (map seq (conj colls c2 c1)))]
+    (let [ss (keep seq (conj colls c2 c1))]
       (when (seq ss)
         (concat (map first ss) (apply interleave-all (map rest ss))))))))
 
