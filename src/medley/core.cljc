@@ -37,14 +37,19 @@
      (recur (dissoc-in m ks) ks' kss)
      (dissoc-in m ks))))
 
+(defn- assoc-some-transient! [m k v]
+  (if (nil? v) m (assoc! m k v)))
+
 (defn assoc-some
   "Associates a key k, with a value v in a map m, if and only if v is not nil."
   ([m k v]
    (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
-   (reduce (fn [m [k v]] (assoc-some m k v))
-           (assoc-some m k v)
-           (partition 2 kvs))))
+   (loop [m (assoc-some-transient! (transient m) k v)
+          kvs kvs]
+     (if (next kvs)
+       (recur (assoc-some-transient! m (first kvs) (second kvs)) (nnext kvs))
+       (persistent! m)))))
 
 (defn update-existing
   "Updates a value in a map given a key and a function, if and only if the key
