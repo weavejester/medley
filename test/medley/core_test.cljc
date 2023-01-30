@@ -182,11 +182,25 @@
   (is (= (m/least "a" "b") "a"))
   (is (= (m/least 3 2 5 -1 0 2) -1)))
 
+(deftest test-least-by
+  (is (= (m/least-by :a) nil))
+  (is (= (m/least-by :a {:a 42}) {:a 42}))
+  (is (= (m/least-by :a {:a 3} {:a 1} {:a 2}) {:a 1}))
+  (is (= (m/least-by :a {:a 3 :b 1} {:a 2 :b 2} {:a 2 :b 3}) {:a 2 :b 3}))
+  (is (= (m/least-by last "foo" "baa" "baz" "qux") "baa")))
+
 (deftest test-greatest
   (is (= (m/greatest) nil))
   (is (= (m/greatest "a") "a"))
   (is (= (m/greatest "a" "b") "b"))
   (is (= (m/greatest 3 2 5 -1 0 2) 5)))
+
+(deftest test-greatest-by
+  (is (= (m/greatest-by :a) nil))
+  (is (= (m/greatest-by :a {:a 42}) {:a 42}))
+  (is (= (m/greatest-by :a {:a 3} {:a 1} {:a 2}) {:a 3}))
+  (is (= (m/greatest-by :a {:a 2 :b 1} {:a 3 :b 2} {:a 3 :b 3}) {:a 3 :b 3}))
+  (is (= (m/greatest-by last "foo" "baa" "baz" "qux") "baz")))
 
 (deftest test-join
   (is (= (m/join [[1 2] []  [3] [4 5 6]]) [1 2 3 4 5 6]))

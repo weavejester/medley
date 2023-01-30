@@ -200,6 +200,26 @@
   ([a b] (if (neg? (compare a b)) a b))
   ([a b & more] (reduce least (least a b) more)))
 
+(defn least-by
+  "Return the argument for which (keyfn x) is least. Determined by the compare
+  function in O(n) time. Prefer `clojure.core/min-key` if keyfn returns numbers."
+  {:arglists '([keyfn & xs])
+   :added "1.6.0"}
+  ([_] nil)
+  ([_ x] x)
+  ([keyfn x y] (if (neg? (compare (keyfn x) (keyfn y))) x y))
+  ([keyfn x y & more]
+   (let [kx (keyfn x) ky (keyfn y)
+         [v kv] (if (neg? (compare kx ky)) [x kx] [y ky])]
+     (loop [v v kv kv more more]
+       (if more
+         (let [w (first more)
+               kw (keyfn w)]
+           (if (pos? (compare kw kv))
+             (recur v kv (next more))
+             (recur w kw (next more))))
+         v)))))
+
 (defn greatest
   "Find the greatest argument (as defined by the compare function) in O(n) time."
   {:arglists '([& xs])}
@@ -207,6 +227,26 @@
   ([a] a)
   ([a b] (if (pos? (compare a b)) a b))
   ([a b & more] (reduce greatest (greatest a b) more)))
+
+(defn greatest-by
+  "Return the argument for which (keyfn x) is greatest. Determined by the compare
+  function in O(n) time. Prefer `clojure.core/max-key` if keyfn returns numbers."
+  {:arglists '([keyfn & xs])
+   :added "1.6.0"}
+  ([_] nil)
+  ([_ x] x)
+  ([keyfn x y] (if (pos? (compare (keyfn x) (keyfn y))) x y))
+  ([keyfn x y & more]
+   (let [kx (keyfn x) ky (keyfn y)
+         [v kv] (if (pos? (compare kx ky)) [x kx] [y ky])]
+     (loop [v v kv kv more more]
+       (if more
+         (let [w (first more)
+               kw (keyfn w)]
+           (if (neg? (compare kw kv))
+             (recur v kv (next more))
+             (recur w kw (next more))))
+         v)))))
 
 (defn join
   "Lazily concatenates a collection of collections into a flat sequence."
