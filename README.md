@@ -45,7 +45,7 @@ a version prior to 0.6.0, please update your usage of `greatest` and
 
 ## License
 
-Copyright © 2022 James Reeves
+Copyright © 2023 James Reeves
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
