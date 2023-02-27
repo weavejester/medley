@@ -51,6 +51,12 @@
        (recur (assoc-some-transient! m (first kvs) (second kvs)) (nnext kvs))
        (persistent! m)))))
 
+(defn assoc-in-some
+  "Associates a value v in a map m, following a nested structure defined by a
+  sequence of keys ks, if and only if v is not nil."
+  [m [k & ks] v]
+  (if (nil? v) m (assoc-in m (into [k] ks) v)))
+
 (defn update-existing
   "Updates a value in a map given a key and a function, if and only if the key
   exists in the map. See: `clojure.core/update`."
