@@ -467,6 +467,49 @@
              (cons run (part (lazy-seq (drop (count run) s))))))))
       coll))))
 
+(defn partition-between
+  "Applies pred to successive values in coll, splitting it each time `(pred
+  prev-item item)` returns logical true. Returns a lazy seq of partitions.
+  Returns a stateful transducer when no collection is provided."
+  {:added "1.7.0"}
+  ([pred]
+   (fn [rf]
+     (let [part #?(:clj (java.util.ArrayList.) :cljs (array-list))
+           prev (volatile! ::none)]
+       (fn
+         ([] (rf))
+         ([result]
+          (rf (if (.isEmpty part)
+                result
+                (let [v (vec (.toArray part))]
+                  (.clear part)
+                  (unreduced (rf result v))))))
+         ([result input]
+          (let [p @prev]
+            (vreset! prev input)
+            (if (or (#?(:clj identical? :cljs keyword-identical?) p ::none)
+                    (not (pred p input)))
+              (do (.add part input) result)
+              (let [v (vec (.toArray part))]
+                (.clear part)
+                (let [ret (rf result v)]
+                  (when-not (reduced? ret)
+                    (.add part input))
+                  ret)))))))))
+  ([pred coll]
+   (lazy-seq
+    (letfn [(take-part [prev coll]
+              (lazy-seq
+               (when-let [[x & xs] (seq coll)]
+                 (when-not (pred prev x)
+                   (cons x (take-part x xs))))))]
+      (lazy-seq
+       (when-let [[x & xs] (seq coll)]
+         (let [run (take-part x xs)]
+           (cons (cons x run)
+                 (partition-between pred
+                                    (lazy-seq (drop (count run) xs)))))))))))
+
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
   value in coll, and index its position starting from zero. Returns a transducer

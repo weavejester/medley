@@ -355,6 +355,29 @@
                       [1 3 5 6 8 9])
            [[1 3 5] [6]]))))
 
+(deftest test-partition-between
+  (testing "sequences"
+    (is (= (m/partition-between = nil) '()))
+    (is (= (m/partition-between < [1]) '((1))))
+    (is (= (m/partition-between < [1 1 2 2 1 1 3 3 3])
+           '((1 1) (2 2 1 1) (3 3 3))))
+    (is (= (m/partition-between < [1 2 3 4]) '((1) (2) (3) (4))))
+    (is (= (m/partition-between < [4 3 2 1]) '((4 3 2 1)))))
+
+  (testing "transducers"
+    (is (= (transduce (m/partition-between <) conj nil) []))
+    (is (= (transduce (m/partition-between <) conj [1]) [[1]]))
+    (is (= (transduce (m/partition-between <) conj [1 1 2 2 1 1 3 3 3])
+           [[1 1] [2 2 1 1] [3 3 3]]))
+    (is (= (sequence (m/partition-between <) [1 2 3 4]) '([1] [2] [3] [4])))
+    (is (= (into [] (m/partition-between <) [4 3 2 1]) [[4 3 2 1]]))
+    (is (= (transduce (m/partition-between <)
+                      (completing (fn [coll x]
+                                    (cond-> (conj coll x) (= [8] x) reduced)))
+                      []
+                      [1 2 3 2 8 9])
+           [[1] [2] [3 2] [8]]))))
+
 (deftest test-indexed
   (testing "sequences"
     (is (= (m/indexed [:a :b :c :d])
