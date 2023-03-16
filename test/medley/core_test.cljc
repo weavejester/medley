@@ -27,7 +27,11 @@
 (deftest test-assoc-some
   (is (= (m/assoc-some {:a 1} :b 2) {:a 1 :b 2}))
   (is (= (m/assoc-some {:a 1} :b nil) {:a 1}))
-  (is (= (m/assoc-some {:a 1} :b 2 :c nil :d 3) {:a 1 :b 2 :d 3})))
+  (is (= (m/assoc-some {:a 1} :b 2 :c nil :d 3) {:a 1 :b 2 :d 3}))
+  (is (= (m/assoc-some nil :a 1) {:a 1}))
+  (is (= (m/assoc-some nil :a 1 :b 2) {:a 1 :b 2}))
+  (is (nil? (m/assoc-some nil :a nil)))
+  (is (nil? (m/assoc-some nil :a nil :b nil))))
 
 (deftest test-update-existing
   (is (= (m/update-existing {:a 1} :a inc) {:a 2}))
