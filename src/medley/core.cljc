@@ -45,11 +45,13 @@
   ([m k v]
    (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
-   (loop [m (assoc-some-transient! (transient m) k v)
+   (loop [acc (assoc-some-transient! (transient (or m {})) k v)
           kvs kvs]
      (if (next kvs)
-       (recur (assoc-some-transient! m (first kvs) (second kvs)) (nnext kvs))
-       (persistent! m)))))
+       (recur (assoc-some-transient! acc (first kvs) (second kvs)) (nnext kvs))
+       (if (zero? (count acc))
+         m
+         (persistent! acc))))))
 
 (defn update-existing
   "Updates a value in a map given a key and a function, if and only if the key
