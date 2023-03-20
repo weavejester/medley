@@ -404,71 +404,6 @@
   ([pred coll]
    (rest (drop-while (complement pred) coll))))
 
-(defn partition-after
-  "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
-  true. Returns a transducer when no collection is provided."
-  {:added "1.5.0"}
-  ([pred]
-   (fn [rf]
-     (let [part #?(:clj (java.util.ArrayList.) :cljs (array-list))
-           split? (volatile! false)]
-       (fn
-         ([] (rf))
-         ([result]
-          (rf (if (.isEmpty part)
-                result
-                (let [v (vec (.toArray part))]
-                  (.clear part)
-                  (unreduced (rf result v))))))
-         ([result x]
-          (if @split?
-            (let [result (rf result (vec (.toArray part)))]
-              (.clear part)
-              (when-not (reduced? result) (.add part x))
-              (when-not (pred x) (vreset! split? false))
-              result)
-            (do (when (pred x) (vreset! split? true))
-                (.add part x)
-                result)))))))
-  ([pred coll]
-   (lazy-seq
-    (when-let [s (seq coll)]
-      (let [run (take-upto pred s)]
-        (cons run (partition-after pred (lazy-seq (drop (count run) s)))))))))
-
-(defn partition-before
-  "Returns a lazy sequence of partitions, splitting before `(pred item)` returns
-  true. Returns a transducer when no collection is provided."
-  {:added "1.5.0"}
-  ([pred]
-   (fn [rf]
-     (let [part #?(:clj (java.util.ArrayList.) :cljs (array-list))]
-       (fn
-         ([] (rf))
-         ([result]
-          (rf (if (.isEmpty part)
-                result
-                (let [v (vec (.toArray part))]
-                  (.clear part)
-                  (unreduced (rf result v))))))
-         ([result x]
-          (if (and (pred x) (not (.isEmpty part)))
-            (let [result (rf result (vec (.toArray part)))]
-              (.clear part)
-              (when-not (reduced? result) (.add part x))
-              result)
-            (do (.add part x)
-                result)))))))
-  ([pred coll]
-   (let [cp (complement pred)]
-     ((fn part [coll]
-        (lazy-seq
-         (when-let [s (seq coll)]
-           (let [run (or (seq (take-while cp s))
-                         (cons (first s) (take-while cp (rest s))))]
-             (cons run (part (lazy-seq (drop (count run) s))))))))
-      coll))))
-
 (defn partition-between
   "Applies pred to successive values in coll, splitting it each time `(pred
   prev-item item)` returns logical true. Returns a lazy seq of partitions.
@@ -511,6 +446,24 @@
            (cons (cons x run)
                  (partition-between pred
                                     (lazy-seq (drop (count run) xs)))))))))))
+
+(defn partition-after
+  "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
+  true. Returns a transducer when no collection is provided."
+  {:added "1.5.0"}
+  ([pred]
+   (partition-between (fn [x _] (pred x))))
+  ([pred coll]
+   (partition-between (fn [x _] (pred x)) coll)))
+
+(defn partition-before
+  "Returns a lazy sequence of partitions, splitting before `(pred item)` returns
+  true. Returns a transducer when no collection is provided."
+  {:added "1.5.0"}
+  ([pred]
+   (partition-between (fn [_ x] (pred x))))
+  ([pred coll]
+   (partition-between (fn [_ x] (pred x)) coll)))
 
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
