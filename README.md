@@ -1,6 +1,4 @@
-# Medley
-
-![Build Status](https://github.com/weavejester/medley/actions/workflows/test.yml/badge.svg)
+# Medley [![Build Status](https://github.com/weavejester/medley/actions/workflows/test.yml/badge.svg)](https://github.com/weavejester/medley/actions/workflows/test.yml)
 
 Medley is a lightweight Clojure/ClojureScript library of useful,
 *mostly* pure functions that are "missing" from clojure.core.
