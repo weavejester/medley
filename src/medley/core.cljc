@@ -440,12 +440,11 @@
                (when-let [[x & xs] (seq coll)]
                  (when-not (pred prev x)
                    (cons x (take-part x xs))))))]
-      (lazy-seq
-       (when-let [[x & xs] (seq coll)]
-         (let [run (take-part x xs)]
-           (cons (cons x run)
-                 (partition-between pred
-                                    (lazy-seq (drop (count run) xs)))))))))))
+      (when-let [[x & xs] (seq coll)]
+        (let [run (take-part x xs)]
+          (cons (cons x run)
+                (partition-between pred
+                                   (lazy-seq (drop (count run) xs))))))))))
 
 (defn partition-after
   "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
