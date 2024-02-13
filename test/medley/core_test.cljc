@@ -33,6 +33,14 @@
   (is (nil? (m/assoc-some nil :a nil)))
   (is (nil? (m/assoc-some nil :a nil :b nil))))
 
+(deftest test-assoc-in-some
+  (is (= (m/assoc-in-some {:a 1 :b {:c 2}} [:b] 3) {:a 1 :b 3}))
+  (is (= (m/assoc-in-some [{:a 1} {:a 2}] [1 :a] 3) [{:a 1} {:a 3}]))
+  (is (= (m/assoc-in-some [{:a 1} {:a 2}] [1 :a] false) [{:a 1} {:a false}]))
+  (is (= (m/assoc-in-some [{:a 1} {:a 2}] [1 :a] nil) [{:a 1} {:a 2}]))
+  (is (nil? (m/assoc-in-some nil :a nil)))
+  (is (nil? (m/assoc-in-some nil [:a :b] nil))))
+
 (deftest test-update-existing
   (is (= (m/update-existing {:a 1} :a inc) {:a 2}))
   (is (= (m/update-existing {:a 1 :b 2} :a inc) {:a 2 :b 2}))
