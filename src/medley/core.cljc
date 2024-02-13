@@ -321,8 +321,8 @@
 
 (defn distinct-by
   "Returns a lazy sequence of the elements of coll, removing any elements that
-  return duplicate values when passed to a function f. Returns a transducer
-  when no collection is provided."
+  return duplicate values when passed to a function f. Returns a stateful
+  transducer when no collection is provided."
   ([f]
    (fn [rf]
      (let [seen (volatile! #{})]
@@ -350,7 +350,7 @@
 (defn dedupe-by
   "Returns a lazy sequence of the elements of coll, removing any **consecutive**
   elements that return duplicate values when passed to a function f. Returns a
-  transducer when no collection is provided."
+  stateful transducer when no collection is provided."
   ([f]
    (fn [rf]
      (let [pv (volatile! ::none)]
@@ -389,8 +389,8 @@
 
 (defn drop-upto
   "Returns a lazy sequence of the items in coll starting *after* the first item
-  for which `(pred item)` returns true. Returns a transducer when no collection
-  is provided."
+  for which `(pred item)` returns true. Returns a stateful transducer when no
+  collection is provided."
   ([pred]
    (fn [rf]
      (let [dv (volatile! true)]
@@ -448,7 +448,7 @@
 
 (defn partition-after
   "Returns a lazy sequence of partitions, splitting after `(pred item)` returns
-  true. Returns a transducer when no collection is provided."
+  true. Returns a stateful transducer when no collection is provided."
   {:added "1.5.0"}
   ([pred]
    (partition-between (fn [x _] (pred x))))
@@ -457,7 +457,7 @@
 
 (defn partition-before
   "Returns a lazy sequence of partitions, splitting before `(pred item)` returns
-  true. Returns a transducer when no collection is provided."
+  true. Returns a stateful transducer when no collection is provided."
   {:added "1.5.0"}
   ([pred]
    (partition-between (fn [_ x] (pred x))))
@@ -466,8 +466,8 @@
 
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
-  value in coll, and index its position starting from zero. Returns a transducer
-  when no collection is provided."
+  value in coll, and index its position starting from zero. Returns a stateful
+  transducer when no collection is provided."
   ([]
    (fn [rf]
      (let [i (volatile! -1)]
@@ -482,7 +482,7 @@
 (defn insert-nth
   "Returns a lazy sequence of the items in coll, with a new item inserted at
   the supplied index, followed by all subsequent items of the collection. Runs
-  in O(n) time. Returns a transducer when no collection is provided."
+  in O(n) time. Returns a stateful transducer when no collection is provided."
   {:added "1.2.0"}
   ([index item]
    (fn [rf]
@@ -506,8 +506,8 @@
 
 (defn remove-nth
   "Returns a lazy sequence of the items in coll, except for the item at the
-  supplied index. Runs in O(n) time. Returns a transducer when no collection is
-  provided."
+  supplied index. Runs in O(n) time. Returns a stateful transducer when no
+  collection is provided."
   {:added "1.2.0"}
   ([index]
    (fn [rf]
@@ -528,8 +528,8 @@
 
 (defn replace-nth
   "Returns a lazy sequence of the items in coll, with a new item replacing the
-  item at the supplied index. Runs in O(n) time. Returns a transducer when no
-  collection is provided."
+  item at the supplied index. Runs in O(n) time. Returns a stateful transducer
+  when no collection is provided."
   {:added "1.2.0"}
   ([index item]
    (fn [rf]
