@@ -245,7 +245,7 @@
 
 (deftest test-collate-by
   (is (= (m/collate-by identity conj vector [1 2 2 3 3])
-         (group-by identity [1 2 2 3 3])))
+         {1 [1], 2 [2 2], 3 [3 3]}))
   (is (= (m/collate-by identity conj hash-set [1 2 2 3 3])
          {1 #{1}, 2 #{2}, 3 #{3}}))
   (is (= (m/collate-by first conj list ["foo" "bar" "baz"])

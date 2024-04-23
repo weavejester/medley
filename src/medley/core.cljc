@@ -330,6 +330,7 @@
   vector of values."
   {:added "1.2.0"}
   [f coll]
+  #_(persistent! (reduce #(assoc! %1 (f %2) %2) (transient {}) coll))
   (collate-by f (fn [_ x] x) coll))
 
 (defn interleave-all
