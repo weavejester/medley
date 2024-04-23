@@ -316,9 +316,12 @@
    (persistent!
     (reduce (fn [m v]
               (let [k (keyf v)]
-                (assoc! m k (if-let [kv (find m k)]
-                              (collatef (val kv) v)
-                              (initf v)))))
+                (assoc! m k #?(:clj  (if-let [kv (find m k)]
+                                       (collatef (val kv) v)
+                                       (initf v))
+                               :cljs (if (contains? m k)
+                                       (collatef (get m k) v)
+                                       (initf v))))))
             (transient {})
             coll))))
 
