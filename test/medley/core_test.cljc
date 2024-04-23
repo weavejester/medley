@@ -243,6 +243,20 @@
                (is (thrown? IllegalArgumentException (m/mapply foo 0)))]
         :cljs [(is (thrown? js/Error (m/mapply foo 0)))])))
 
+(deftest test-collate-by
+  (is (= (m/collate-by identity conj vector [1 2 2 3 3])
+         (group-by identity [1 2 2 3 3])))
+  (is (= (m/collate-by identity conj hash-set [1 2 2 3 3])
+         {1 #{1}, 2 #{2}, 3 #{3}}))
+  (is (= (m/collate-by first conj list ["foo" "bar" "baz"])
+         {\f '("foo"), \b '("baz" "bar")}))
+  (is (= (m/collate-by first (fn [_ x] x) ["foo" "bar" "baz"])
+         {\f "foo", \b "baz"}))
+  (is (= (m/collate-by even? + [1 2 3 4 5 6])
+         {true 12, false 9}))
+  (is (= (m/collate-by first (fn [_ x] x) []) {}))
+  (is (= (m/collate-by first conj vector []) {})))
+
 (deftest test-index-by
   (is (= (m/index-by identity [1 2 3]) {1 1, 2 2, 3 3}))
   (is (= (m/index-by inc [1 2 3]) {2 1, 3 2, 4 3}))

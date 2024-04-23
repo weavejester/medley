@@ -290,6 +290,38 @@
   ([f m]        (apply f (apply concat m)))
   ([f a & args] (apply f a (apply concat (butlast args) (last args)))))
 
+(defn collate-by
+  "Similar to `clojure.core/group-by`, this groups values in a collection,
+  coll, based on the return value of a function, keyf applied to each element.
+
+  Unlike `group-by`, the values of the map are constructed via an initf and
+  collatef function. The initf function is applied to the first element
+  matched by keyf, and defaults to the identity function. The collatef function
+  takes the result of initf and the next keyed element, and produces a new
+  value.
+
+  To put this in context, the `group-by` function can be defined as:
+
+      (defn group-by [f coll]
+        (collate-by f conj vector coll))
+
+  While the `medley.core/index-by` function can be (and is) defined as:
+
+      (defn index-by [f coll]
+        (collate-by f (fn [_ x] x) coll))"
+  {:added "1.8.0"}
+  ([keyf collatef coll]
+   (collate-by keyf collatef identity coll))
+  ([keyf collatef initf coll]
+   (persistent!
+    (reduce (fn [m v]
+              (let [k (keyf v)]
+                (assoc! m k (if-let [kv (find m k)]
+                              (collatef (val kv) v)
+                              (initf v)))))
+            (transient {})
+            coll))))
+
 (defn index-by
   "Returns a map of the elements of coll keyed by the result of f on each
   element. The value at each key will be the last element in coll associated
@@ -298,7 +330,7 @@
   vector of values."
   {:added "1.2.0"}
   [f coll]
-  (persistent! (reduce #(assoc! %1 (f %2) %2) (transient {}) coll)))
+  (collate-by f (fn [_ x] x) coll))
 
 (defn interleave-all
   "Returns a lazy seq of the first item in each coll, then the second, etc.
