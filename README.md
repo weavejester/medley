@@ -13,11 +13,11 @@ and limits itself to a small set of general-purpose functions.
 
 Add the following dependency to your deps.edn file:
 
-    dev.weavejester/medley {:mvn/version "1.7.0"}
+    dev.weavejester/medley {:mvn/version "1.8.0"}
 
 Or to your Leiningen project file:
 
-    [dev.weavejester/medley "1.7.0"]
+    [dev.weavejester/medley "1.8.0"]
 
 ## Documentation
 
