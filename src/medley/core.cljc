@@ -40,6 +40,19 @@
 (defn- assoc-some-transient! [m k v]
   (if (nil? v) m (assoc! m k v)))
 
+(defn assoc-conj
+  "Associate a key with a non-nil value in a map. If the key already exists
+  in the map, a vector of values is associated with the key."
+  [map key val]
+  (if (nil? val)
+    map
+    (assoc map key
+           (if-let [cur (get map key)]
+             (if (vector? cur)
+               (conj cur val)
+               [cur val])
+             val))))
+
 (defn assoc-some
   "Associates a key k, with a value v in a map m, if and only if v is not nil."
   ([m k v]
