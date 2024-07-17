@@ -37,6 +37,10 @@
      (recur (dissoc-in m ks) ks' kss)
      (dissoc-in m ks))))
 
+(defn- editable? [coll]
+  #?(:clj  (instance? clojure.lang.IEditableCollection coll)
+     :cljs (satisfies? cljs.core/IEditableCollection coll)))
+
 (defn- assoc-some-transient! [m k v]
   (if (nil? v) m (assoc! m k v)))
 
@@ -45,13 +49,19 @@
   ([m k v]
    (if (nil? v) m (assoc m k v)))
   ([m k v & kvs]
-   (loop [acc (assoc-some-transient! (transient (or m {})) k v)
-          kvs kvs]
-     (if (next kvs)
-       (recur (assoc-some-transient! acc (first kvs) (second kvs)) (nnext kvs))
-       (if (zero? (count acc))
-         m
-         (persistent! acc))))))
+   (if (editable? m)
+     (loop [acc (assoc-some-transient! (transient (or m {})) k v)
+            kvs kvs]
+       (if (next kvs)
+         (recur (assoc-some-transient! acc (first kvs) (second kvs)) (nnext kvs))
+         (if (zero? (count acc))
+           m
+           (persistent! acc))))
+     (loop [acc (assoc-some m k v)
+            kvs kvs]
+       (if (next kvs)
+         (recur (assoc-some acc (first kvs) (second kvs)) (nnext kvs))
+         acc)))))
 
 (defn update-existing
   "Updates a value in a map given a key and a function, if and only if the key
@@ -82,10 +92,6 @@
                    (assoc m k (apply f (val kv) args)))
                  m)))]
     (up m ks f args)))
-
-(defn- editable? [coll]
-  #?(:clj  (instance? clojure.lang.IEditableCollection coll)
-     :cljs (satisfies? cljs.core/IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
   (let [coll' (if (record? coll) (into {} coll) coll)]
