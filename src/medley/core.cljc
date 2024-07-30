@@ -506,6 +506,35 @@
   ([pred coll]
    (partition-between (fn [_ x] (pred x)) coll)))
 
+(defn window
+  "A sliding window, returning a lazy sequence of partitions, containing each
+  element and n-1 preceeding elements, when present. Therefore partitions at the
+  start may contain fewer items than the rest. Returns a stateful transducer
+  when no collection is provided. For a sliding window containing each element
+  and n-1 _following_ elements, use `clojure.core/partition` with a `step` size
+  of 1."
+  {:added "1.9.0"}
+  ([n]
+   (fn [rf]
+     (let [part #?(:clj (java.util.ArrayList. n) :cljs (array))]
+       (fn
+         ([] (rf))
+         ([result] (rf result))
+         ([result x]
+          #?(:clj (.add part x) :cljs (.push part x))
+          (when (< n #?(:clj (.size part) :cljs (.-length part)))
+            #?(:clj (.remove part 0) :cljs (.shift part)))
+          (rf result (vec #?(:clj (.toArray part) :cljs (.slice part)))))))))
+  ([n coll]
+   (letfn [(part [part-n coll]
+             (let [run (doall (take part-n coll))]
+               (lazy-seq
+                (when (== part-n (count run))
+                  (cons run
+                        (part (min n (inc part-n))
+                              (if (== n part-n) (rest coll) coll)))))))]
+     (part (min 1 n) coll))))
+
 (defn indexed
   "Returns an ordered, lazy sequence of vectors `[index item]`, where item is a
   value in coll, and index its position starting from zero. Returns a stateful
