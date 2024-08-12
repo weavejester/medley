@@ -56,7 +56,7 @@
          (recur (assoc-some-transient! acc (first kvs) (second kvs)) (nnext kvs))
          (if (zero? (count acc))
            m
-           (persistent! acc))))
+           (with-meta (persistent! acc) (meta m)))))
      (loop [acc (assoc-some m k v)
             kvs kvs]
        (if (next kvs)
