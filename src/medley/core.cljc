@@ -658,3 +658,12 @@
   {:added "1.4.0"}
   [x]
   (instance? #?(:clj java.util.regex.Pattern :cljs js/RegExp) x))
+
+(defn index-of
+  "Returns the index of the first occurrence of the item in the sequential
+  collection coll, or -1 if not found."
+  {:added "1.9.0"}
+  [^java.util.List coll item]
+  (if (nil? coll)
+    -1
+    (.indexOf coll item)))

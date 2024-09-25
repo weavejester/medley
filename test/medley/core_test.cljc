@@ -500,3 +500,17 @@
   (is (m/regexp? #"x"))
   (is (not (m/regexp? "x")))
   (is (not (m/regexp? nil))))
+
+(deftest test-index-of
+  (is (= -1 (m/index-of nil :a)))
+  (is (= -1 (m/index-of [] :a)))
+  (is (= -1 (m/index-of '() :a)))
+
+  (is (= -1 (m/index-of  [:a] :b)))
+  (is (= -1 (m/index-of '(:a) :b)))
+
+  (is (= 1 (m/index-of  [:a :b :c :d] :b)))
+  (is (= 2 (m/index-of '(:a :b :c :d) :c)))
+
+  (is (= 1 (m/index-of (range 0 10) 1)))
+  (is (= 1 (m/index-of (map str [:a :b]) ":b"))))
