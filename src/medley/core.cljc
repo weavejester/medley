@@ -661,9 +661,9 @@
 
 (defn index-of
   "Returns the index of the first occurrence of the item in the sequential
-  collection coll, or -1 if not found."
+  collection coll, or nil if not found."
   {:added "1.9.0"}
   [^java.util.List coll item]
-  (if (nil? coll)
-    -1
-    (.indexOf coll item)))
+  (when (some? coll)
+    (let [index (.indexOf coll item)]
+      (when-not (neg? index) index))))

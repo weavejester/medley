@@ -504,12 +504,12 @@
   (is (not (m/regexp? nil))))
 
 (deftest test-index-of
-  (is (= -1 (m/index-of nil :a)))
-  (is (= -1 (m/index-of [] :a)))
-  (is (= -1 (m/index-of '() :a)))
+  (is (nil? (m/index-of nil :a)))
+  (is (nil? (m/index-of [] :a)))
+  (is (nil? (m/index-of '() :a)))
 
-  (is (= -1 (m/index-of  [:a] :b)))
-  (is (= -1 (m/index-of '(:a) :b)))
+  (is (nil? (m/index-of  [:a] :b)))
+  (is (nil? (m/index-of '(:a) :b)))
 
   (is (= 1 (m/index-of  [:a :b :c :d] :b)))
   (is (= 2 (m/index-of '(:a :b :c :d) :c)))
