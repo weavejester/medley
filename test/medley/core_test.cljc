@@ -516,3 +516,12 @@
 
   (is (= 1 (m/index-of (range 0 10) 1)))
   (is (= 1 (m/index-of (map str [:a :b]) ":b"))))
+
+(deftest test-find-in
+  (is (nil? (m/find-in {} [:a])))
+  (is (nil? (m/find-in {} [:a :b])))
+  (is (nil? (m/find-in {:a {}} [:a :b])))
+  (is (= [:a 1] (m/find-in {:a 1} [:a])))
+  (is (= [:b 2] (m/find-in {:a {:b 2}} [:a :b])))
+  (is (= [:b {:c 3}] (m/find-in {:a {:b {:c 3}}} [:a :b])))
+  (is (= [:c 3] (m/find-in {:a {:b {:c 3}}} [:a :b :c]))))

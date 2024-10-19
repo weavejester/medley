@@ -667,3 +667,13 @@
   (when (some? coll)
     (let [index (.indexOf coll item)]
       (when-not (neg? index) index))))
+
+(defn find-in
+  "Similar to `clojure.core/find`, except that it finds a key/value pair in an
+  nested associate structure `m`, given a sequence of keys `ks`. See also:
+  `clojure.core/get-in`."
+  {:added "1.9.0"}
+  [m ks]
+  (if (next ks)
+    (-> (get-in m (butlast ks)) (find (last ks)))
+    (find m (first ks))))
