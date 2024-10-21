@@ -24,6 +24,13 @@
   (is (= (m/dissoc-in {:a 1} [])
          {:a 1})))
 
+(deftest test-assoc-conj
+  (is (= (m/assoc-conj nil :a 1) {:a 1}))
+  (is (= (m/assoc-conj nil :a nil) nil))
+  (is (= (m/assoc-conj {:a nil} :a 1) {:a 1}))
+  (is (= (m/assoc-conj {:a 1} :a 2) {:a [1 2]}))
+  (is (= (m/assoc-conj {:a 1} :a nil) {:a 1})))
+
 (deftest test-assoc-some
   (is (= (m/assoc-some {:a 1} :b 2) {:a 1 :b 2}))
   (is (= (m/assoc-some {:a 1} :b nil) {:a 1}))
