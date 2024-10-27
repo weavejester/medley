@@ -19,6 +19,10 @@ Or to your Leiningen project file:
 
     [dev.weavejester/medley "1.8.1"]
 
+Or to your deps-clr.edn file:
+
+    io.github.weavejester/medley {:git/tag "FIXME" :git/sha "FIXME"}
+
 ## Documentation
 
 * [API Docs](http://weavejester.github.io/medley/medley.core.html)
