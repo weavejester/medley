@@ -1,7 +1,8 @@
 (ns medley.core-test
-  #?(:clj (:import [clojure.lang ArityException]))
-  (:require #?(:clj  [clojure.test :refer :all]
-               :cljs [cljs.test :refer-macros [deftest is testing]])
+  #?@(:cljs    []
+      :default [(:import [clojure.lang ArityException])])
+  (:require #?(:cljs    [cljs.test :refer-macros [deftest is testing]]
+               :default [clojure.test :refer :all])
             [medley.core :as m]))
 
 (deftest test-find-first
@@ -162,17 +163,17 @@
 
 (deftest test-queue
   (testing "empty"
-    #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue)))
-       :cljs (is (instance? cljs.core.PersistentQueue (m/queue))))
+    #?(:cljs    (is (instance? cljs.core.PersistentQueue (m/queue)))
+       :default (is (instance? clojure.lang.PersistentQueue (m/queue))))
     (is (empty? (m/queue))))
   (testing "not empty"
-    #?(:clj  (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3])))
-       :cljs (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3]))))
+    #?(:cljs    (is (instance? cljs.core.PersistentQueue (m/queue [1 2 3])))
+       :default (is (instance? clojure.lang.PersistentQueue (m/queue [1 2 3]))))
     (is (= (first (m/queue [1 2 3])) 1))))
 
 (deftest test-queue?
-  #?(:clj  (is (m/queue? clojure.lang.PersistentQueue/EMPTY))
-     :cljs (is (m/queue? cljs.core.PersistentQueue.EMPTY)))
+  #?(:cljs    (is (m/queue? cljs.core.PersistentQueue.EMPTY))
+     :default (is (m/queue? clojure.lang.PersistentQueue/EMPTY)))
   (is (not (m/queue? []))))
 
 (deftest test-boolean?
@@ -241,9 +242,11 @@
     (is (= (m/mapply foo 0 {:baz 1}) [0 1]))
     (is (= (m/mapply foo 0 {:spam 1}) [0 nil]))
     (is (= (m/mapply foo 0 nil) [0 nil]))
-    #?@(:clj  [(is (thrown? ArityException (m/mapply foo {})))
-               (is (thrown? IllegalArgumentException (m/mapply foo 0)))]
-        :cljs [(is (thrown? js/Error (m/mapply foo 0)))])))
+    (is (thrown? #?(:clj  IllegalArgumentException
+                    :cljr ArgumentException
+                    :cljs js/Error) (m/mapply foo 0)))
+    #?(:cljs    (is (= (m/mapply foo {}) [nil nil]))
+       :default (is (thrown? ArityException (m/mapply foo {}))))))
 
 (deftest test-collate-by
   (is (= (m/collate-by identity conj vector [1 2 2 3 3])
@@ -451,10 +454,11 @@
   (is (= (m/abs 2) 2))
   (is (= (m/abs -2.1) 2.1))
   (is (= (m/abs 1.8) 1.8))
-  #?@(:clj [(is (= (m/abs -1/3) 1/3))
-            (is (= (m/abs 1/2) 1/2))
-            (is (= (m/abs 3N) 3N))
-            (is (= (m/abs -4N) 4N))]))
+  #?@(:cljs    []
+      :default [(is (= (m/abs -1/3) 1/3))
+                (is (= (m/abs 1/2) 1/2))
+                (is (= (m/abs 3N) 3N))
+                (is (= (m/abs -4N) 4N))]))
 
 (deftest test-deref-swap!
   (let [a (atom 0)]
@@ -472,12 +476,14 @@
 
 (deftest test-ex-message
   (is (= (m/ex-message (ex-info "foo" {})) "foo"))
-  (is (= (m/ex-message (new #?(:clj Exception :cljs js/Error) "bar")) "bar")))
+  (let [ex (new #?(:cljs js/Error :default Exception) "bar")]
+    (is (= (m/ex-message ex) "bar"))))
 
 (deftest test-ex-cause
-  (let [cause (new #?(:clj Exception :cljs js/Error) "foo")]
+  (let [cause (new #?(:cljs js/Error :default Exception) "foo")]
     (is (= (m/ex-cause (ex-info "foo" {} cause)) cause))
-    #?(:clj (is (= (m/ex-cause (Exception. "foo" cause)) cause)))))
+    #?@(:cljs    []
+        :default [(is (= (m/ex-cause (Exception. "foo" cause)) cause))])))
 
 (deftest test-uuid?
   (let [x #uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6"]
@@ -488,14 +494,20 @@
 
 (deftest test-uuid
   (let [x (m/uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6")]
-    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
+    (is (instance? #?(:clj  java.util.UUID
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) x))
     (is (= x #uuid "d1a4adfa-d9cf-4aa5-9f05-a15365d1bfa6"))))
 
 (deftest test-random-uuid
   (let [x (m/random-uuid)
         y (m/random-uuid)]
-    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) x))
-    (is (instance? #?(:clj java.util.UUID :cljs cljs.core.UUID) y))
+    (is (instance? #?(:clj  java.util.UUID
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) x))
+    (is (instance? #?(:clj  java.util.UUID
+                      :cljr System.Guid
+                      :cljs cljs.core.UUID) y))
     (is (not= x y))))
 
 (deftest test-regexp?
