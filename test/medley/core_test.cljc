@@ -398,6 +398,28 @@
                       [1 2 3 2 8 9])
            [[1] [2] [3 2] [8]]))))
 
+(deftest test-window
+  (testing "sequences"
+    (is (= (m/window 2 nil) '()))
+    (is (= (m/window 2 [:a]) '((:a))))
+    (is (= (m/window 2 [:a :b]) '((:a) (:a :b))))
+    (is (= (m/window 2 [:a :b :c]) '((:a) (:a :b) (:b :c))))
+    (is (= (take 3 (m/window 0 [:a :b :c])) '(() () ())))
+    (is (= (m/window 10 [:a :b :c]) '((:a) (:a :b) (:a :b :c)))))
+  (testing "transducers"
+    (is (= (transduce (m/window 2) conj nil) []))
+    (is (= (transduce (m/window 2) conj [:a]) [[:a]]))
+    (is (= (transduce (m/window 2) conj [:a :b]) [[:a] [:a :b]]))
+    (is (= (transduce (m/window 2) conj [:a :b :c]) [[:a] [:a :b] [:b :c]]))
+    (is (= (transduce (m/window 0) conj [:a :b :c]) [[] [] []]))
+    (is (= (transduce (m/window 10) conj [:a :b :c]) [[:a] [:a :b] [:a :b :c]]))
+    (is (= (transduce (m/window 2)
+                      (completing (fn [coll x]
+                                    (cond-> (conj coll x) (= [:a :b] x) reduced)))
+                      []
+                      [:a :b :c :d])
+           [[:a] [:a :b]]))))
+
 (deftest test-indexed
   (testing "sequences"
     (is (= (m/indexed [:a :b :c :d])
