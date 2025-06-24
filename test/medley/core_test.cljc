@@ -433,6 +433,27 @@
     (is (= (into [] (m/indexed) [])
            []))))
 
+(deftest test-mapcat-indexed
+  (testing "sequences"
+    (is (= (m/mapcat-indexed vector nil)
+           []))
+    (is (= (m/mapcat-indexed vector [])
+           []))
+    (is (= (m/mapcat-indexed repeat [:a :b :c :d])
+           [:b :c :c :d :d :d]))
+    (is (= (m/mapcat-indexed repeat [])
+           [])))
+
+  (testing "transducers"
+    (is (= (into [] (m/mapcat-indexed vector) nil)
+           []))
+    (is (= (into [] (m/mapcat-indexed vector) [])
+           []))
+    (is (= (into [] (m/mapcat-indexed repeat) [:a :b :c :d])
+           [:b :c :c :d :d :d]))
+    (is (= (into [] (m/mapcat-indexed repeat) [])
+           []))))
+
 (deftest test-insert-nth
   (testing "sequences"
     (is (= (m/insert-nth 0 :a [1 2 3 4]) [:a 1 2 3 4]))

@@ -550,6 +550,21 @@
   ([coll]
    (map-indexed vector coll)))
 
+(defn mapcat-indexed
+  "Returns the result of applying concat to the result of applying f to 0 and
+  the first item of coll, followed by applying f to 1 and the second item in
+  coll, etc, until coll is exhausted. Thus function f should accept 2 arguments,
+  index and item. Returns a stateful transducer when no collection is provided."
+  ([f]
+   (comp (map-indexed f) cat))
+  ([f coll]
+   (letfn [(mapci [idx coll]
+             (lazy-seq
+              (when-let [s (seq coll)]
+                (concat (f idx (first s))
+                        (mapci (inc idx) (rest s))))))]
+     (mapci 0 coll))))
+
 (defn insert-nth
   "Returns a lazy sequence of the items in coll, with a new item inserted at
   the supplied index, followed by all subsequent items of the collection. Runs
