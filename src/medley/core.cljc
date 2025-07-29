@@ -706,3 +706,19 @@
   (if (next ks)
     (-> (get-in m (butlast ks)) (find (last ks)))
     (find m (first ks))))
+
+(defn attach-namespace-to-keys
+  "Attaches a namespace to the keys of a map, creating namespaced keywords.
+  
+  Keys in the :except set will remain unchanged. The namespace can be a keyword,
+  string, or symbol."
+  [m namespace & {:keys [except]}]
+  (let [except-set (set except)
+        ns-name (name namespace)]
+    (reduce-map
+     (fn [xf]
+       (fn [acc k v]
+         (if (except-set k)
+           (xf acc k v)
+           (xf acc (keyword ns-name (name k)) v))))
+     m)))

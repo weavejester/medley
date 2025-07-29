@@ -547,3 +547,61 @@
   (is (= [:b 2] (m/find-in {:a {:b 2}} [:a :b])))
   (is (= [:b {:c 3}] (m/find-in {:a {:b {:c 3}}} [:a :b])))
   (is (= [:c 3] (m/find-in {:a {:b {:c 3}}} [:a :b :c]))))
+
+(deftest test-attach-namespace-to-keys
+  (testing "basic functionality"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2} :ns)
+           {:ns/a 1 :ns/b 2}))
+    (is (= (m/attach-namespace-to-keys {:foo "bar" :baz 42} "my.ns")
+           {:my.ns/foo "bar" :my.ns/baz 42})))
+  
+  (testing "with string keys"
+    (is (= (m/attach-namespace-to-keys {"a" 1 "b" 2} :ns)
+           {:ns/a 1 :ns/b 2})))
+  
+  (testing "with symbol keys"
+    (is (= (m/attach-namespace-to-keys {'a 1 'b 2} :ns)
+           {:ns/a 1 :ns/b 2})))
+  
+  (testing "with namespace as string"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2} "my-ns")
+           {:my-ns/a 1 :my-ns/b 2})))
+  
+  (testing "with namespace as symbol"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2} 'my-ns)
+           {:my-ns/a 1 :my-ns/b 2})))
+  
+  (testing "with except option"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2 :c 3} :ns :except [:b])
+           {:ns/a 1 :b 2 :ns/c 3}))
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2 :c 3} :ns :except [:a :c])
+           {:a 1 :ns/b 2 :c 3})))
+  
+  (testing "with except option using different key types"
+    (is (= (m/attach-namespace-to-keys {"a" 1 "b" 2 "c" 3} :ns :except ["b"])
+           {:ns/a 1 "b" 2 :ns/c 3}))
+    (is (= (m/attach-namespace-to-keys {'a 1 'b 2 'c 3} :ns :except ['b])
+           {:ns/a 1 'b 2 :ns/c 3})))
+  
+  (testing "empty map"
+    (is (= (m/attach-namespace-to-keys {} :ns) {})))
+  
+  (testing "empty except list"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2} :ns :except [])
+           {:ns/a 1 :ns/b 2})))
+  
+  (testing "except list with non-existent keys"
+    (is (= (m/attach-namespace-to-keys {:a 1 :b 2} :ns :except [:x :y])
+           {:ns/a 1 :ns/b 2})))
+  
+  (testing "preserves map type"
+    (is (= (m/attach-namespace-to-keys (sorted-map :a 1 :b 2) :ns)
+           (sorted-map :ns/a 1 :ns/b 2))))
+  
+  (testing "with nested values"
+    (is (= (m/attach-namespace-to-keys {:a {:nested "value"} :b [1 2 3]} :ns)
+           {:ns/a {:nested "value"} :ns/b [1 2 3]})))
+  
+  (testing "with nil values"
+    (is (= (m/attach-namespace-to-keys {:a nil :b 2} :ns)
+           {:ns/a nil :ns/b 2}))))
