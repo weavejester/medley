@@ -547,3 +547,28 @@
   (is (= [:b 2] (m/find-in {:a {:b 2}} [:a :b])))
   (is (= [:b {:c 3}] (m/find-in {:a {:b {:c 3}}} [:a :b])))
   (is (= [:c 3] (m/find-in {:a {:b {:c 3}}} [:a :b :c]))))
+
+(deftest test-map-padded
+  (is (= (map + (range 3) (range 4) (range 5) (range 10))
+         [0 4 8]
+         (take 3 (m/map-padded + 0 (range 3) (range 4) (range 5) (range 10)))))
+  (is (= [0 4 8 19 28 35 36 37 38 39]
+         (m/map-padded + 10 (range 3) (range 4) (range 5) (range 10))))
+  (is (= ()
+         (m/map-padded + 10 () () ())))
+  (testing "laziness"
+    (let [state (volatile! [])]
+      (is (= [0 4 8 19 28]
+             (take 5 (m/map-padded (fn [a b c d]
+                                     (vswap! state conj [a b c d])
+                                     (+ a b c d))
+                                   10
+                                   (range 3) (range 4) (range 5) (range 10)))))
+      (is (= [[0 0 0 0] [1 1 1 1] [2 2 2 2] [10 3 3 3] [10 10 4 4]]
+             @state))))
+  (testing "handles sequences with nils"
+    (is (= [[nil 0 0 0] [nil 1 1 1] [nil 2 2 2]
+            [:missing 3 3 3]
+            [:missing :missing 4 4]
+            [:missing :missing :missing 5]]
+           (take 6 (m/map-padded vector :missing [nil nil nil] (range 4) (range 5) (range 10)))))))

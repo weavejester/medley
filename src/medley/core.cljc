@@ -706,3 +706,31 @@
   (if (next ks)
     (-> (get-in m (butlast ks)) (find (last ks)))
     (find m (first ks))))
+
+(letfn [(first* [s v] (if s (first s) v))]
+  (defn map-padded
+    "Similar to `clojure.core/map`, except that it runs until all colls are
+    exhausted, using `val` as the missing value for each exhausted coll."
+    {:added "<<next>>"}
+    #_{:clj-kondo/ignore [:unused-binding]}
+    ([f val c1] (map f c1))
+    ([f val c1 c2]
+     (lazy-seq
+      (let [s1 (seq c1) s2 (seq c2)]
+        (when (or s1 s2)
+          (cons (f (first* s1 val) (first* s2 val))
+                (map-padded f val (rest s1) (rest s2)))))))
+    ([f val c1 c2 c3]
+     (lazy-seq
+      (let [s1 (seq c1) s2 (seq c2) s3 (seq c3)]
+        (when (or s1 s2 s3)
+          (cons (f (first* s1 val) (first* s2 val) (first* s3 val))
+                (map-padded f val (rest s1) (rest s2) (rest s3)))))))
+    ([f val c1 c2 c3 & colls]
+     (let [step (fn step [cs]
+                  (lazy-seq
+                   (let [ss (mapv seq cs)]
+                     (when (some identity ss)
+                       (cons (apply f (mapv #(first* % val) ss))
+                             (step (mapv rest ss)))))))]
+        (step (conj colls c3 c2 c1))))))
