@@ -733,4 +733,22 @@
                      (when (some identity ss)
                        (cons (apply f (mapv #(first* % val) ss))
                              (step (mapv rest ss)))))))]
-        (step (conj colls c3 c2 c1))))))
+       (step (conj colls c3 c2 c1))))))
+
+(defn sequence-padded
+  "Similar to `clojure.core/sequence`, except that it runs until all colls are
+    exhausted, using `val` as the missing value for each exhausted coll."
+  #_{:clj-kondo/ignore [:unused-binding]}
+  ([xform val c1] (sequence xform c1))
+  ([xform val c1 & colls]
+   (let [f (xform conj)
+         step (fn step [cs]
+                (lazy-seq
+                 (let [ss (mapv seq cs)]
+                   (if (some identity ss)
+                     (let [res (apply f nil (mapv #(if % (first %) val) ss))]
+                       (cond (reduced? res) (f (deref res))
+                             (nil? res) (step (mapv rest ss))
+                             :else (concat res (lazy-seq (step (mapv rest ss))))))
+                     (f nil)))))]
+     (step (conj colls c1)))))

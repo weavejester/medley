@@ -572,3 +572,43 @@
             [:missing :missing 4 4]
             [:missing :missing :missing 5]]
            (take 6 (m/map-padded vector :missing [nil nil nil] (range 4) (range 5) (range 10)))))))
+
+(deftest test-sequence-padded
+  (is (= (map + (range 3) (range 4) (range 5) (range 10))
+         [0 4 8]
+         (take 3 (m/sequence-padded (map +) 0 (range 3) (range 4) (range 5) (range 10)))))
+  (is (= [0 4 8 19 28 35 36 37 38 39]
+         (m/sequence-padded (map +) 10 (range 3) (range 4) (range 5) (range 10))))
+  (is (= ()
+         (m/sequence-padded (map +) 10 () () ())))
+  (testing "laziness"
+    (let [state (volatile! [])]
+      (is (= [0 4 8 19 28]
+             (take 5 (m/sequence-padded
+                      (map (fn [a b c d]
+                             (vswap! state conj [a b c d])
+                             (+ a b c d)))
+                      10
+                      (range 3) (range 4) (range 5) (range 10)))))
+      (is (= [[0 0 0 0] [1 1 1 1] [2 2 2 2] [10 3 3 3] [10 10 4 4]]
+             @state))))
+  (testing "handles sequences with nils"
+    (is (= [[nil 0 0 0] [nil 1 1 1] [nil 2 2 2]
+            [:missing 3 3 3]
+            [:missing :missing 4 4]
+            [:missing :missing :missing 5]]
+           (take 6 (m/sequence-padded (map vector) :missing [nil nil nil] (range 4) (range 5) (range 10))))))
+  (testing "slightly more complex xform"
+    (let [xf
+          (comp
+           (map vector)
+           (drop 5)
+           (filter (comp even? second))
+           (map #(mapv inc %))
+           (take 5))]
+      (is (= [[101 19 507] [101 25 509] [101 31 511] [101 37 513] [101 43 515]]
+             (m/sequence-padded xf
+                                100
+                                (range 5)
+                                (range 0 50 3)
+                                (range 500 1000)))))))
