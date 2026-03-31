@@ -737,7 +737,7 @@
   (defn map-padded
     "Similar to `clojure.core/map`, except that it runs until all colls are
     exhausted, using `val` as the missing value for each exhausted coll."
-    {:added "<<next>>"}
+    {:added "1.10.0"}
     #_{:clj-kondo/ignore [:unused-binding]}
     ([f val c1] (map f c1))
     ([f val c1 c2]
@@ -763,7 +763,8 @@
 
 (defn sequence-padded
   "Similar to `clojure.core/sequence`, except that it runs until all colls are
-    exhausted, using `val` as the missing value for each exhausted coll."
+  exhausted, using `val` as the missing value for each exhausted coll."
+  {:added "1.10.0"}
   #_{:clj-kondo/ignore [:unused-binding]}
   ([xform val c1] (sequence xform c1))
   ([xform val c1 & colls]
