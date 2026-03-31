@@ -1,0 +1,6 @@
+{:paths ["src"]
+ :aliases
+ {:test {:extra-paths ["test"]
+         :extra-deps  {io.github.dmiller/test-runner {:git/tag "v0.5.1clr" :git/sha "814e06f"}}
+         :exec-fn     cognitect.test-runner.api/test
+         :exec-args   {:dirs ["test"]}}}}
