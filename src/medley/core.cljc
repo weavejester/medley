@@ -522,15 +522,23 @@
   {:added "1.9.0"}
   ([n]
    (fn [rf]
-     (let [part #?(:clj (java.util.ArrayList. n) :cljs (array))]
+     (let [part #?(:clj  (java.util.ArrayList. n)
+                   :cljr (System.Collections.ArrayList.)
+                   :cljs (array))]
        (fn
          ([] (rf))
          ([result] (rf result))
          ([result x]
-          #?(:clj (.add part x) :cljs (.push part x))
-          (when (< n #?(:clj (.size part) :cljs (.-length part)))
-            #?(:clj (.remove part 0) :cljs (.shift part)))
-          (rf result (vec #?(:clj (.toArray part) :cljs (.slice part)))))))))
+          #?(:clj (.add part x) :cljr (.Add part x) :cljs (.push part x))
+          (when (< n #?(:clj  (.size part)
+                        :cljr (.Count part)
+                        :cljs (.-length part)))
+            #?(:clj  (.remove part 0)
+               :cljr (.RemoveAt part 0)
+               :cljs (.shift part)))
+          (rf result (vec #?(:clj  (.toArray part)
+                             :cljr (.ToArray part)
+                             :cljs (.slice part)))))))))
   ([n coll]
    (letfn [(part [part-n coll]
              (let [run (doall (take part-n coll))]
