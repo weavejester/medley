@@ -21,7 +21,7 @@ Or to your Leiningen project file:
 
 Or to your deps-clr.edn file:
 
-    io.github.weavejester/medley {:git/tag "1.10.0" :git/sha "FIXME"}
+    io.github.weavejester/medley {:git/tag "1.10.0" :git/sha "7bf2619"}
 
 ## Documentation
 
