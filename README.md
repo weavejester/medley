@@ -27,11 +27,6 @@ Or to your deps-clr.edn file:
 
 * [API Docs](http://weavejester.github.io/medley/medley.core.html)
 
-## Ports
-
-* [Medley for the CLR](https://github.com/E-A-Griffin/medley) is kindly
-maintained by [Emma Griffin](https://github.com/E-A-Griffin).
-
 ## Pre-1.0 Breaking Changes
 
 In 0.7.0 the minimum Clojure version was changed from 1.5.1 to 1.7.0
