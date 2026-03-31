@@ -5,8 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.9.0"]]
   :plugins [[lein-codox "0.10.8"]
-            [lein-cljsbuild "1.1.7"]
-            [lein-doo "0.1.10"]]
+            [lein-cljsbuild "1.1.8"]
+            [lein-doo "0.1.11"]]
   :codox
   {:output-path "codox"
    :metadata {:doc/format :markdown}
@@ -26,9 +26,9 @@
    "test-all"  ["do" ["test-clj"] ["test-cljs"]]}
   :profiles
   {:provided {:dependencies [[org.clojure/clojurescript "1.10.439"]]}
-   :test {:dependencies [[org.mozilla/rhino "1.7.14"]]}
+   :test {:dependencies [[org.mozilla/rhino "1.9.1"]]}
    :dev {:dependencies [[criterium "0.4.6"]]
          :jvm-opts ^:replace {}}
    :1.10 {:dependencies [[org.clojure/clojure "1.10.0"]]}
    :1.11 {:dependencies [[org.clojure/clojure "1.11.2"]]}
-   :1.12 {:dependencies [[org.clojure/clojure "1.12.2"]]}})
+   :1.12 {:dependencies [[org.clojure/clojure "1.12.4"]]}})

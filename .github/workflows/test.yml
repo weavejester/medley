@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Prepare java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '8'
@@ -18,16 +18,16 @@ jobs:
 
       - name: Prepare Clojure CLR
         run: |
-          dotnet tool install --global Clojure.Main --version 1.12.0-alpha10
-          dotnet tool install --global Clojure.Cljr --version 0.1.0-alpha4
+          dotnet tool install --global Clojure.Main --version 1.12.2
+          dotnet tool install --global Clojure.Cljr --version 0.1.0-alpha11
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@10.1
+        uses: DeLaGuardo/setup-clojure@13.6.0
         with:
-          lein: 2.9.10
+          lein: 2.12.0
 
       - name: Cache clojure dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.m2/repository
           key: cljdeps-${{ hashFiles('project.clj') }}
