@@ -522,7 +522,7 @@
   {:added "1.9.0"}
   ([n]
    (fn [rf]
-     (let [part #?(:clj  (java.util.ArrayList. n)
+     (let [part #?(:clj  (java.util.ArrayList. ^int n)
                    :cljr (System.Collections.ArrayList.)
                    :cljs (array))]
        (fn
