@@ -11,6 +11,7 @@
   {:output-path "codox"
    :metadata {:doc/format :markdown}
    :source-uri "http://github.com/weavejester/medley/blob/{version}/{filepath}#L{line}"}
+  :global-vars {*warn-on-reflection* true}
   :cljsbuild
   {:builds
    {:test
