@@ -63,6 +63,11 @@
          (recur (assoc-some acc (first kvs) (second kvs)) (nnext kvs))
          acc)))))
 
+(defn assoc-in-some
+  "Associates a value v in a nested associative structure provided that v is not nil."
+  [m k v]
+  (cond-> m (some? v) (assoc-in k v)))
+
 (defn update-existing
   "Updates a value in a map given a key and a function, if and only if the key
   exists in the map. See: `clojure.core/update`."
